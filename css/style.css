@@ -1,6 +1,6 @@
 /* ============================================
    QuizMaster - Design System & Styles
-   Premium Dark Theme with Glassmorphism
+   Premium Light Theme with Glassmorphism
    ============================================ */
 
 /* Google Fonts */
@@ -11,22 +11,22 @@
    ============================================ */
 :root {
   /* Colors */
-  --bg-primary: #06060f;
-  --bg-secondary: #0d0d1a;
-  --bg-tertiary: #141428;
-  --bg-card: rgba(20, 20, 45, 0.6);
-  --bg-card-hover: rgba(30, 30, 60, 0.7);
-  --bg-glass: rgba(255, 255, 255, 0.03);
-  --bg-glass-hover: rgba(255, 255, 255, 0.06);
+  --bg-primary: #f8f9fc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f0f1f5;
+  --bg-card: rgba(255, 255, 255, 0.85);
+  --bg-card-hover: rgba(255, 255, 255, 0.95);
+  --bg-glass: rgba(0, 0, 0, 0.02);
+  --bg-glass-hover: rgba(0, 0, 0, 0.04);
 
-  --border-color: rgba(255, 255, 255, 0.06);
-  --border-hover: rgba(255, 255, 255, 0.12);
+  --border-color: rgba(0, 0, 0, 0.08);
+  --border-hover: rgba(0, 0, 0, 0.15);
   --border-accent: rgba(139, 92, 246, 0.3);
 
-  --text-primary: #f0f0f5;
-  --text-secondary: #9ca3af;
-  --text-muted: #6b7280;
-  --text-accent: #a78bfa;
+  --text-primary: #1a1a2e;
+  --text-secondary: #555770;
+  --text-muted: #8b8da3;
+  --text-accent: #7c3aed;
 
   /* Gradients */
   --gradient-primary: linear-gradient(135deg, #8b5cf6, #06b6d4);
@@ -34,24 +34,24 @@
   --gradient-success: linear-gradient(135deg, #10b981, #06b6d4);
   --gradient-danger: linear-gradient(135deg, #ef4444, #ec4899);
   --gradient-warning: linear-gradient(135deg, #f59e0b, #ef4444);
-  --gradient-bg: linear-gradient(135deg, #06060f 0%, #0d0d2b 50%, #06060f 100%);
+  --gradient-bg: linear-gradient(135deg, #f8f9fc 0%, #eef0f7 50%, #f8f9fc 100%);
 
   /* Accent Colors */
-  --accent-purple: #8b5cf6;
-  --accent-cyan: #06b6d4;
-  --accent-pink: #ec4899;
-  --accent-green: #10b981;
-  --accent-red: #ef4444;
-  --accent-yellow: #f59e0b;
-  --accent-blue: #3b82f6;
+  --accent-purple: #7c3aed;
+  --accent-cyan: #0891b2;
+  --accent-pink: #db2777;
+  --accent-green: #059669;
+  --accent-red: #dc2626;
+  --accent-yellow: #d97706;
+  --accent-blue: #2563eb;
 
   /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
-  --shadow-glow-purple: 0 0 20px rgba(139, 92, 246, 0.15);
-  --shadow-glow-cyan: 0 0 20px rgba(6, 182, 212, 0.15);
-  --shadow-glow-pink: 0 0 20px rgba(236, 72, 153, 0.15);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --shadow-glow-purple: 0 0 20px rgba(139, 92, 246, 0.12);
+  --shadow-glow-cyan: 0 0 20px rgba(6, 182, 212, 0.12);
+  --shadow-glow-pink: 0 0 20px rgba(236, 72, 153, 0.12);
 
   /* Typography */
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -128,9 +128,9 @@ body::before {
   width: 100%;
   height: 100%;
   background:
-    radial-gradient(ellipse 600px 400px at 20% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 70%),
-    radial-gradient(ellipse 500px 350px at 80% 80%, rgba(6, 182, 212, 0.05) 0%, transparent 70%),
-    radial-gradient(ellipse 400px 300px at 50% 50%, rgba(236, 72, 153, 0.03) 0%, transparent 70%);
+    radial-gradient(ellipse 600px 400px at 20% 20%, rgba(139, 92, 246, 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 350px at 80% 80%, rgba(6, 182, 212, 0.03) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 300px at 50% 50%, rgba(236, 72, 153, 0.02) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -147,7 +147,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ::selection {
-  background: rgba(139, 92, 246, 0.3);
+  background: rgba(139, 92, 246, 0.2);
   color: var(--text-primary);
 }
 
@@ -160,12 +160,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(139, 92, 246, 0.3);
+  background: rgba(139, 92, 246, 0.2);
   border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(139, 92, 246, 0.5);
+  background: rgba(139, 92, 246, 0.35);
 }
 
 /* ============================================
@@ -188,7 +188,7 @@ h1, h2, h3, h4, h5, h6 {
   top: 0;
   left: 0;
   z-index: 100;
-  background: rgba(10, 10, 25, 0.85);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-right: 1px solid var(--border-color);
@@ -294,7 +294,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .nav-item.active {
-  background: rgba(139, 92, 246, 0.1);
+  background: rgba(139, 92, 246, 0.08);
   color: var(--text-primary);
 }
 
@@ -375,6 +375,7 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: var(--radius-lg);
   padding: var(--spacing-xl);
   transition: all var(--transition-base);
+  box-shadow: var(--shadow-sm);
 }
 
 .card:hover {
@@ -680,7 +681,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .radio-option.selected {
   border-color: var(--accent-purple);
-  background: rgba(139, 92, 246, 0.08);
+  background: rgba(139, 92, 246, 0.06);
 }
 
 .radio-option input[type="radio"] {
@@ -1128,7 +1129,7 @@ h1, h2, h3, h4, h5, h6 {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(8px);
   z-index: 1000;
   display: none;
@@ -1623,7 +1624,7 @@ h1, h2, h3, h4, h5, h6 {
     left: 0;
     right: 0;
     height: var(--header-height);
-    background: rgba(10, 10, 25, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border-color);
     z-index: 150;
@@ -1700,7 +1701,7 @@ h1, h2, h3, h4, h5, h6 {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.3);
   z-index: 150;
 }
 
@@ -1789,8 +1790,8 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
   z-index: 1;
   background:
-    radial-gradient(ellipse 600px 400px at 30% 30%, rgba(139, 92, 246, 0.1) 0%, transparent 70%),
-    radial-gradient(ellipse 500px 350px at 70% 70%, rgba(6, 182, 212, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 600px 400px at 30% 30%, rgba(139, 92, 246, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 350px at 70% 70%, rgba(6, 182, 212, 0.05) 0%, transparent 70%),
     var(--bg-primary);
 }
 

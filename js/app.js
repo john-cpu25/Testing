@@ -487,7 +487,337 @@ const App = (() => {
       createdAt: new Date().toISOString()
     };
 
-    saveQuizzes([sampleQuiz]);
+    // Quiz: Nội Quy Lao Động Rincovitch
+    const rincovitchQuiz = {
+      id: generateId(),
+      title: 'Nội Quy Lao Động - Công Ty Rincovitch',
+      description: 'Bài test về nội quy lao động của Công ty Rincovitch bao gồm các quy định về thời gian làm việc, hiệu suất, tài sản, chế độ nghỉ phép, phúc lợi và kỷ luật lao động.',
+      timeLimit: 30,
+      questions: [
+        {
+          id: generateId(),
+          text: 'Nội quy lao động của Công ty Rincovitch áp dụng đối với đối tượng nào?',
+          options: [
+            'Tất cả người lao động, bao gồm cả người đang trong thời gian thử việc.',
+            'Người lao động đã làm việc tại công ty trên 01 năm.',
+            'Chỉ dành cho khối kỹ sư và thiết kế (Engineers/Drafters).',
+            'Chỉ dành cho nhân viên chính thức có hợp đồng không xác định thời hạn.'
+          ],
+          correctIndex: 0
+        },
+        {
+          id: generateId(),
+          text: 'Thời gian làm việc tiêu chuẩn trong một tuần của nhân viên là bao nhiêu giờ?',
+          options: [
+            '48 giờ/tuần.',
+            '35 giờ/tuần.',
+            '44 giờ/tuần.',
+            '40 giờ/tuần.'
+          ],
+          correctIndex: 3
+        },
+        {
+          id: generateId(),
+          text: 'Thời hạn cuối cùng để cập nhật Timesheet lên hệ thống Total Energy hàng tuần là khi nào?',
+          options: [
+            'Trước 08:30 Thứ Hai tuần kế tiếp.',
+            'Trước 13:30 Thứ Sáu hàng tuần.',
+            'Trước 17:30 Thứ Sáu hàng tuần.',
+            'Bất cứ lúc nào trong ngày Thứ Bảy.'
+          ],
+          correctIndex: 2
+        },
+        {
+          id: generateId(),
+          text: 'Mục tiêu hiệu suất tối thiểu đối với nhân sự thuộc bộ phận Engineers và Drafters là bao nhiêu?',
+          options: [
+            '100% hiệu suất.',
+            '85% hiệu suất.',
+            '50% hiệu suất.',
+            '75% hiệu suất.'
+          ],
+          correctIndex: 1
+        },
+        {
+          id: generateId(),
+          text: 'Tại sao mục tiêu hiệu suất của Senior Structural Engineer lại thấp hơn so với Engineers thông thường?',
+          options: [
+            'Do họ phải phụ trách kiểm tra chất lượng và hỗ trợ đào tạo kỹ thuật.',
+            'Vì họ có quyền nghỉ ngơi nhiều hơn trong giờ làm việc.',
+            'Do khối lượng dự án của cấp Senior luôn ít hơn cấp Junior.',
+            'Vì họ được phép làm việc ít giờ hơn trong tuần.'
+          ],
+          correctIndex: 0
+        },
+        {
+          id: generateId(),
+          text: 'Trường hợp nhân viên có hiệu suất dưới mức quy định trong 02 tuần liên tiếp, hình thức xử lý đầu tiên là gì?',
+          options: [
+            'Chuyển sang bộ phận khác làm việc.',
+            'Trừ lương tháng đó.',
+            'Nhắc nhở và yêu cầu lập kế hoạch cải thiện.',
+            'Sa thải ngay lập tức mà không báo trước.'
+          ],
+          correctIndex: 2
+        },
+        {
+          id: generateId(),
+          text: 'Ai là người có thẩm quyền phê duyệt việc mang tài sản của Công ty ra ngoài?',
+          options: [
+            'Thư ký hoặc Trợ lý văn phòng.',
+            'Mr. Vu Do - Engineer Team Leader.',
+            'Nhân viên tự quyết định nếu phục vụ công việc tại nhà.',
+            'Bất kỳ nhân sự cấp Senior nào.'
+          ],
+          correctIndex: 1
+        },
+        {
+          id: generateId(),
+          text: 'Hành vi nào sau đây bị nghiêm cấm tuyệt đối liên quan đến tài khoản Công ty?',
+          options: [
+            'Sử dụng tài khoản để trao đổi chuyên môn với đồng nghiệp.',
+            'Thay đổi mật khẩu định kỳ 3 tháng một lần.',
+            'Đăng nhập tài khoản vào thiết bị không thuộc Công ty quản lý.',
+            'Đăng nhập tài khoản trên nhiều trình duyệt khác nhau.'
+          ],
+          correctIndex: 2
+        },
+        {
+          id: generateId(),
+          text: 'Hình thức kỷ luật nào có thể áp dụng ngay lập tức khi phát hiện nhân viên sử dụng phần mềm crack cho công việc của Công ty?',
+          options: [
+            'Khiển trách bằng miệng.',
+            'Kỷ luật sa thải và chấm dứt hợp đồng lao động ngay lập tức.',
+            'Tạm đình chỉ công tác 01 tuần để kiểm điểm.',
+            'Yêu cầu nhân viên tự mua bản quyền bằng tiền cá nhân và tiếp tục làm việc.'
+          ],
+          correctIndex: 1
+        },
+        {
+          id: generateId(),
+          text: 'Theo quy định về khu vực cây xanh, nhân viên không được làm điều gì?',
+          options: [
+            'Ngồi làm việc gần khu vực có nhiều cây xanh.',
+            'Tưới thêm nước sạch cho cây vào mỗi buổi sáng.',
+            'Chụp ảnh khu vực cây xanh để đăng mạng xã hội.',
+            'Tự ý di chuyển vị trí hoặc đổ nước thừa, rác vào chậu cây.'
+          ],
+          correctIndex: 3
+        },
+        {
+          id: generateId(),
+          text: 'Nhân viên nên làm gì khi phát hiện tủ thuốc y tế bị thiếu thuốc hoặc vật tư?',
+          options: [
+            'Báo ngay cho thư ký hoặc trợ lý để xử lý.',
+            'Lấy thuốc từ tủ cá nhân thay thế vào tủ chung.',
+            'Chờ đến kỳ kiểm kê tài sản hàng năm mới thông báo.',
+            'Tự bỏ tiền túi mua bổ sung để đồng nghiệp sử dụng.'
+          ],
+          correctIndex: 0
+        },
+        {
+          id: generateId(),
+          text: 'Quy định nào sau đây là đúng khi sử dụng lò vi sóng tại khu vực bếp?',
+          options: [
+            'Có thể để lò hoạt động và đi ra ngoài làm việc khác.',
+            'Cho phép sử dụng các hộp nhựa dùng một lần không chịu nhiệt.',
+            'Có thể hâm nóng trứng nguyên vỏ nếu để công suất thấp.',
+            'Không để vật dụng kim loại, giấy bạc vào lò vi sóng.'
+          ],
+          correctIndex: 3
+        },
+        {
+          id: generateId(),
+          text: 'Loại thực phẩm nào sau đây được khuyến cáo hạn chế mang vào văn phòng để kiểm soát mùi?',
+          options: [
+            'Sầu riêng, mắm tôm, cá khô.',
+            'Cơm trắng và thịt kho thông thường.',
+            'Bánh mì, sữa tươi.',
+            'Trái cây tươi như táo, cam.'
+          ],
+          correctIndex: 0
+        },
+        {
+          id: generateId(),
+          text: 'Nhân viên có thời gian làm việc chính thức bao lâu thì bắt đầu được tính hưởng lương tháng 13 (theo tỷ lệ)?',
+          options: [
+            'Sau 06 tháng làm việc.',
+            'Sau khi làm việc chính thức trên 30 ngày.',
+            'Phải đủ 365 ngày làm việc chính thức.',
+            'Ngay từ ngày đầu tiên thử việc.'
+          ],
+          correctIndex: 1
+        },
+        {
+          id: generateId(),
+          text: 'Công thức tính lương tháng 13 cho nhân viên làm việc chưa đủ 365 ngày là gì?',
+          options: [
+            'Lương tháng 13 = Lương tháng × 0.5.',
+            'Lương tháng 13 = (Số ngày làm việc chính thức / 365) × Lương tháng.',
+            'Lương tháng 13 = (Số tháng làm việc / 12) × Lương cơ bản.',
+            'Lương tháng 13 = Tổng thu nhập năm / 12.'
+          ],
+          correctIndex: 1
+        },
+        {
+          id: generateId(),
+          text: 'Ngày lễ nào sau đây nhân viên được nghỉ hưởng nguyên lương theo quy định riêng của công ty (khác với quy định chung của Nhà nước)?',
+          options: [
+            'Ngày thành lập công ty.',
+            'Ngày sinh nhật sếp.',
+            'Ngày Lễ Giáng sinh (25/12).',
+            'Ngày Quốc tế Phụ nữ (08/03).'
+          ],
+          correctIndex: 2
+        },
+        {
+          id: generateId(),
+          text: 'Nhân viên có đủ 12 tháng làm việc tại công ty sẽ có bao nhiêu ngày phép năm?',
+          options: [
+            '20 ngày.',
+            '14 ngày.',
+            '12 ngày.',
+            '15 ngày.'
+          ],
+          correctIndex: 2
+        },
+        {
+          id: generateId(),
+          text: 'Quy định về việc cộng dồn ngày phép năm tại Rincovitch như thế nào?',
+          options: [
+            'Chỉ được cộng dồn tối đa 05 ngày mỗi năm.',
+            'Phép năm không được cộng dồn, sẽ mất nếu không sử dụng hết trong năm.',
+            'Chỉ được cộng dồn nếu có sự đồng ý bằng văn bản của Giám đốc.',
+            'Được cộng dồn ngày phép chưa sử dụng sang năm kế tiếp.'
+          ],
+          correctIndex: 3
+        },
+        {
+          id: generateId(),
+          text: 'Khi muốn nghỉ phép từ 03 ngày trở lên, nhân viên phải báo trước bao lâu?',
+          options: [
+            'Trước 01 tuần.',
+            'Trước ít nhất 01 tháng.',
+            'Trước 02 tuần.',
+            'Trước 03 ngày làm việc.'
+          ],
+          correctIndex: 0
+        },
+        {
+          id: generateId(),
+          text: 'Lao động nữ sinh đôi được nghỉ thai sản tổng cộng bao nhiêu tháng?',
+          options: [
+            '06 tháng.',
+            '08 tháng.',
+            '12 tháng.',
+            '07 tháng.'
+          ],
+          correctIndex: 3
+        },
+        {
+          id: generateId(),
+          text: 'Trong trường hợp sinh thường, lao động nam được nghỉ hưởng chế độ thai sản bao nhiêu ngày?',
+          options: [
+            '07 ngày làm việc.',
+            '10 ngày làm việc.',
+            '03 ngày làm việc.',
+            '05 ngày làm việc.'
+          ],
+          correctIndex: 3
+        },
+        {
+          id: generateId(),
+          text: 'Nhân viên được nghỉ bao nhiêu ngày hưởng đủ lương khi bản thân kết hôn?',
+          options: [
+            '03 ngày.',
+            '01 ngày.',
+            '02 ngày.',
+            '05 ngày.'
+          ],
+          correctIndex: 0
+        },
+        {
+          id: generateId(),
+          text: 'Khi muốn ra ngoài vì mục đích cá nhân trong giờ làm việc, nhân viên cần làm gì?',
+          options: [
+            'Tự đi và sẽ làm bù thời gian đó vào cuối ngày.',
+            'Nhờ đồng nghiệp ngồi cạnh báo lại với quản lý nếu có ai hỏi.',
+            'Phải được sự chấp thuận trước của Engineer Team Leader.',
+            'Chỉ cần ghi chú lại vào Timesheet cuối tuần là được.'
+          ],
+          correctIndex: 2
+        },
+        {
+          id: generateId(),
+          text: 'Hình thức thông báo nào là bắt buộc khi nhân viên đến trễ hoặc vắng mặt đột xuất do bệnh?',
+          options: [
+            'Chờ đến khi khỏe lại rồi mới đến công ty giải thích lý do.',
+            'Gửi email cho bộ phận kế toán.',
+            'Gửi tin nhắn qua mạng xã hội cho bất kỳ đồng nghiệp nào.',
+            'Thông báo ngay cho Engineer Team Leader qua điện thoại.'
+          ],
+          correctIndex: 3
+        },
+        {
+          id: generateId(),
+          text: 'Công ty có quyền chấm dứt hợp đồng lao động ngay lập tức mà không cần báo trước 30-45 ngày trong trường hợp nào?',
+          options: [
+            'Khi nhân viên không cải thiện sau cảnh cáo chính thức lần 1.',
+            'Khi nhân viên đi trễ quá 03 lần trong một tháng.',
+            'Khi nhân viên từ chối làm thêm giờ vào ngày nghỉ tuần.',
+            'Khi nhân viên có ý kiến bất đồng với quản lý trong cuộc họp.'
+          ],
+          correctIndex: 0
+        },
+        {
+          id: generateId(),
+          text: 'Ai chịu trách nhiệm quản lý nhân sự bên dưới và phân công công việc trực tiếp cho các Senior Structural Engineer?',
+          options: [
+            'Giám đốc tài chính.',
+            'BIM Manager.',
+            'Engineer Team Leader.',
+            'Thư ký dự án.'
+          ],
+          correctIndex: 2
+        },
+        {
+          id: generateId(),
+          text: 'Việc dán nhãn thực phẩm trong tủ lạnh chung có mục đích gì?',
+          options: [
+            'Tránh nhầm lẫn hoặc bị vứt bỏ nhầm khi dọn tủ lạnh cuối tuần.',
+            'Để khoe các món ăn ngon với đồng nghiệp.',
+            'Theo quy định bắt buộc của Bộ Y tế về an toàn thực phẩm văn phòng.',
+            'Để tính phí lưu trữ thực phẩm hàng tháng.'
+          ],
+          correctIndex: 0
+        },
+        {
+          id: generateId(),
+          text: 'Nhân viên nữ trở lại làm việc trước khi hết thời gian nghỉ thai sản cần báo trước bao nhiêu ngày?',
+          options: [
+            'Báo trước ít nhất 07 ngày.',
+            'Báo trước ít nhất 15 ngày.',
+            'Báo trước ít nhất 03 ngày.',
+            'Không cần báo trước nếu đã hết 04 tháng nghỉ thai sản.'
+          ],
+          correctIndex: 1
+        },
+        {
+          id: generateId(),
+          text: 'Căn cứ nào sau đây KHÔNG phải là cơ sở chính để xem xét mức lương hàng năm?',
+          options: [
+            'Kết quả hoạt động của công ty.',
+            'Số lượng con cái của nhân viên.',
+            'Các yếu tố thị trường lao động.',
+            'Hiệu quả công việc tổng thể của nhân viên.'
+          ],
+          correctIndex: 1
+        }
+      ],
+      createdAt: new Date().toISOString()
+    };
+
+    saveQuizzes([sampleQuiz, rincovitchQuiz]);
   }
 
   // ---- Initialization ----
