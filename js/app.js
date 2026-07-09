@@ -427,9 +427,26 @@ const App = (() => {
   // ---- Sample Data ----
   function initSampleData() {
     const quizzes = getQuizzes();
-    if (quizzes.length > 0) return;
 
-    const sampleQuiz = {
+    // If no quizzes at all, create both sample and Rincovitch quiz
+    if (quizzes.length === 0) {
+      const sampleQuiz = _createSampleQuiz();
+      const rincovitchQuiz = _createRincovitchQuiz();
+      saveQuizzes([sampleQuiz, rincovitchQuiz]);
+      return;
+    }
+
+    // If quizzes exist but Rincovitch quiz is missing, inject it
+    const hasRincovitch = quizzes.some(q => q.title === 'Nội Quy Lao Động - Công Ty Rincovitch');
+    if (!hasRincovitch) {
+      const rincovitchQuiz = _createRincovitchQuiz();
+      quizzes.push(rincovitchQuiz);
+      saveQuizzes(quizzes);
+    }
+  }
+
+  function _createSampleQuiz() {
+    return {
       id: generateId(),
       title: 'Kiến Thức Tổng Hợp',
       description: 'Bài test kiến thức tổng hợp gồm các câu hỏi đa dạng về nhiều lĩnh vực khác nhau.',
@@ -486,9 +503,10 @@ const App = (() => {
       ],
       createdAt: new Date().toISOString()
     };
+  }
 
-    // Quiz: Nội Quy Lao Động Rincovitch
-    const rincovitchQuiz = {
+  function _createRincovitchQuiz() {
+    return {
       id: generateId(),
       title: 'Nội Quy Lao Động - Công Ty Rincovitch',
       description: 'Bài test về nội quy lao động của Công ty Rincovitch bao gồm các quy định về thời gian làm việc, hiệu suất, tài sản, chế độ nghỉ phép, phúc lợi và kỷ luật lao động.',
@@ -816,11 +834,10 @@ const App = (() => {
       ],
       createdAt: new Date().toISOString()
     };
-
-    saveQuizzes([sampleQuiz, rincovitchQuiz]);
   }
 
-  // ---- Initialization ----
+
+
   function init() {
     initDefaultAccounts();
     initSampleData();
