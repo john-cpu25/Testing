@@ -275,6 +275,9 @@ const App = (() => {
     const avgScore = results.length > 0
       ? Math.round(results.reduce((sum, r) => sum + r.percentage, 0) / results.length)
       : 0;
+    const avgTime = results.length > 0
+      ? Math.round(results.reduce((sum, r) => sum + (r.timeTaken || 0), 0) / results.length)
+      : 0;
 
     // Stats grid
     document.getElementById('dashboardStats').innerHTML = `
@@ -283,20 +286,20 @@ const App = (() => {
         <div class="stat-value">${totalQuizzes}</div>
         <div class="stat-label">Bài Quiz</div>
       </div>
-      <div class="stat-card cyan">
-        <div class="stat-icon">❓</div>
-        <div class="stat-value">${totalQuestions}</div>
-        <div class="stat-label">Câu Hỏi</div>
-      </div>
       <div class="stat-card pink">
         <div class="stat-icon">📝</div>
         <div class="stat-value">${totalResults}</div>
-        <div class="stat-label">${user && user.role !== 'admin' ? 'Lượt Làm Của Bạn' : 'Lượt Làm Bài'}</div>
+        <div class="stat-label">${user && user.role !== 'admin' ? 'Lượt Làm Của Bạn' : 'Tổng Lượt Làm'}</div>
       </div>
       <div class="stat-card green">
         <div class="stat-icon">📈</div>
         <div class="stat-value">${avgScore}%</div>
-        <div class="stat-label">${user && user.role !== 'admin' ? 'Điểm TB Của Bạn' : 'Điểm TB'}</div>
+        <div class="stat-label">${user && user.role !== 'admin' ? 'Điểm TB Của Bạn' : 'Điểm Trung Bình'}</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-icon">⏱️</div>
+        <div class="stat-value">${App.formatTime(avgTime)}</div>
+        <div class="stat-label">${user && user.role !== 'admin' ? 'Thời Gian TB Của Bạn' : 'Thời Gian Trung Bình'}</div>
       </div>
     `;
 

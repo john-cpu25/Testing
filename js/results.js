@@ -52,6 +52,7 @@ const Results = (() => {
     const avgScore = Math.round(results.reduce((sum, r) => sum + r.percentage, 0) / results.length);
     const highestScore = Math.max(...results.map(r => r.percentage));
     const passRate = Math.round((results.filter(r => r.percentage >= 60).length / results.length) * 100);
+    const avgTime = Math.round(results.reduce((sum, r) => sum + (r.timeTaken || 0), 0) / results.length);
 
     document.getElementById('resultsStats').innerHTML = `
       <div class="stat-card purple">
@@ -68,6 +69,11 @@ const Results = (() => {
         <div class="stat-icon">🏆</div>
         <div class="stat-value">${highestScore}%</div>
         <div class="stat-label">Điểm Cao Nhất</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-icon">⏱️</div>
+        <div class="stat-value">${App.formatTime(avgTime)}</div>
+        <div class="stat-label">Thời Gian TB</div>
       </div>
       <div class="stat-card pink">
         <div class="stat-icon">✅</div>
