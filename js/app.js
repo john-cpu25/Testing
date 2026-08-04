@@ -859,6 +859,7 @@ const App = (() => {
     saveQuizzes,
     getResults,
     saveResults,
+    getAccounts,
     navigate,
     openModal,
     closeModal,

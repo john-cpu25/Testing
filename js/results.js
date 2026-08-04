@@ -106,6 +106,79 @@ const Results = (() => {
     `;
   }
 
+  // ---- Render User Summary Table ----
+  function renderUserSummaryTable(filteredResults) {
+    const accounts = App.getAccounts().filter(a => a.role !== 'admin');
+    
+    const summaryList = accounts.map(acc => {
+      const userResults = filteredResults.filter(r => r.userName === acc.displayName);
+      const attempts = userResults.length;
+      let highestScore = 0;
+      let bestTime = 0;
+      
+      if (attempts > 0) {
+        highestScore = Math.max(...userResults.map(r => r.percentage));
+        const bestResults = userResults.filter(r => r.percentage === highestScore);
+        bestTime = Math.min(...bestResults.map(r => r.timeTaken));
+      }
+
+      return {
+        name: acc.displayName,
+        email: acc.username,
+        attempts,
+        highestScore,
+        bestTime
+      };
+    });
+
+    let displayList = summaryList;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      displayList = displayList.filter(s => s.name.toLowerCase().includes(q) || s.email.toLowerCase().includes(q));
+    }
+
+    if (displayList.length === 0) return '';
+
+    return `
+      <h3 style="margin-top: 1rem; margin-bottom: 1rem; color: var(--primary);">Tiến Độ Làm Bài (Danh sách theo Email)</h3>
+      <div class="table-container" style="margin-bottom: 2rem;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Họ Tên</th>
+              <th>Email</th>
+              <th>Trạng Thái</th>
+              <th>Lượt Làm</th>
+              <th>Điểm Cao Nhất</th>
+              <th>Thời Gian Tốt Nhất</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${displayList.map((s, i) => {
+              const hasTaken = s.attempts > 0;
+              const statusBadge = hasTaken ? '<span class="badge badge-green">Đã Làm</span>' : '<span class="badge badge-red">Chưa Làm</span>';
+              
+              const scoreBadge = hasTaken ? \`<span class="badge badge-\${s.highestScore >= 80 ? 'green' : s.highestScore >= 60 ? 'cyan' : s.highestScore >= 40 ? 'yellow' : 'red'}">\${s.highestScore}%</span>\` : '-';
+              
+              return \`
+                <tr>
+                  <td>\${i + 1}</td>
+                  <td style="font-weight: 600;">\${App.escapeHtml(s.name)}</td>
+                  <td>\${App.escapeHtml(s.email)}</td>
+                  <td>\${statusBadge}</td>
+                  <td>\${s.attempts}</td>
+                  <td>\${scoreBadge}</td>
+                  <td>\${hasTaken ? App.formatTime(s.bestTime) : '-'}</td>
+                </tr>
+              \`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
   // ---- Render Table ----
   function renderTable() {
     let results = getFilteredResults();
@@ -114,6 +187,9 @@ const Results = (() => {
     if (currentFilter !== 'all') {
       results = results.filter(r => r.quizId === currentFilter);
     }
+
+    // Unfiltered by search results for the summary table
+    const summaryResults = results;
 
     // Search
     if (searchQuery) {
@@ -153,72 +229,79 @@ const Results = (() => {
 
     const container = document.getElementById('resultsTableContainer');
 
-    if (results.length === 0) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-state-icon">🏆</div>
-          <div class="empty-state-title">Chưa có kết quả nào</div>
-          <div class="empty-state-text">Kết quả sẽ hiển thị khi có người hoàn thành bài test.</div>
-          <button class="btn btn-primary" onclick="App.navigate('quiz')">📝 Làm Bài Test</button>
-        </div>
-      `;
-      return;
+    let summaryHtml = '';
+    if (App.isAdmin()) {
+      summaryHtml = renderUserSummaryTable(summaryResults);
     }
 
-    const sortIcon = (field) => {
-      if (currentSort !== field) return '↕️';
-      return sortDirection === 'asc' ? '↑' : '↓';
-    };
+    let detailedHtml = '';
+    if (results.length === 0) {
+      detailedHtml = `
+        <div class="empty-state">
+          <div class="empty-state-icon">🏆</div>
+          <div class="empty-state-title">Chưa có kết quả chi tiết nào</div>
+          <div class="empty-state-text">Kết quả sẽ hiển thị khi có người hoàn thành bài test.</div>
+        </div>
+      `;
+    } else {
+      const sortIcon = (field) => {
+        if (currentSort !== field) return '↕️';
+        return sortDirection === 'asc' ? '↑' : '↓';
+      };
 
-    const sortClass = (field) => currentSort === field ? 'sorted' : '';
+      const sortClass = (field) => currentSort === field ? 'sorted' : '';
 
-    container.innerHTML = `
-      <div class="table-container">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th class="${sortClass('name')}" onclick="Results.setSort('name')">Người Làm ${sortIcon('name')}</th>
-              <th class="${sortClass('quiz')}" onclick="Results.setSort('quiz')">Bài Test</th>
-              <th class="${sortClass('score')}" onclick="Results.setSort('score')">Điểm ${sortIcon('score')}</th>
-              <th>Kết Quả</th>
-              <th class="${sortClass('time')}" onclick="Results.setSort('time')">Thời Gian ${sortIcon('time')}</th>
-              <th class="${sortClass('date')}" onclick="Results.setSort('date')">Ngày ${sortIcon('date')}</th>
-              <th>Chi Tiết</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${results.map((r, i) => {
-              const scoreClass = r.percentage >= 80 ? 'excellent' : r.percentage >= 60 ? 'good' : r.percentage >= 40 ? 'average' : 'poor';
-              const badgeClass = r.percentage >= 80 ? 'green' : r.percentage >= 60 ? 'cyan' : r.percentage >= 40 ? 'yellow' : 'red';
+      detailedHtml = `
+        <h3 style="margin-top: 1rem; margin-bottom: 1rem; color: var(--primary);">Chi Tiết Lịch Sử Làm Bài</h3>
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th class="${sortClass('name')}" onclick="Results.setSort('name')">Người Làm ${sortIcon('name')}</th>
+                <th class="${sortClass('quiz')}" onclick="Results.setSort('quiz')">Bài Test</th>
+                <th class="${sortClass('score')}" onclick="Results.setSort('score')">Điểm ${sortIcon('score')}</th>
+                <th>Kết Quả</th>
+                <th class="${sortClass('time')}" onclick="Results.setSort('time')">Thời Gian ${sortIcon('time')}</th>
+                <th class="${sortClass('date')}" onclick="Results.setSort('date')">Ngày ${sortIcon('date')}</th>
+                <th>Chi Tiết</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${results.map((r, i) => {
+                const scoreClass = r.percentage >= 80 ? 'excellent' : r.percentage >= 60 ? 'good' : r.percentage >= 40 ? 'average' : 'poor';
+                const badgeClass = r.percentage >= 80 ? 'green' : r.percentage >= 60 ? 'cyan' : r.percentage >= 40 ? 'yellow' : 'red';
 
-              return `
-                <tr>
-                  <td>${i + 1}</td>
-                  <td style="font-weight: 600; color: var(--text-primary);">${App.escapeHtml(r.userName)}</td>
-                  <td>${App.escapeHtml(r.quizTitle)}</td>
-                  <td>
-                    <span class="badge badge-${badgeClass}">${r.score}/${r.totalQuestions} (${r.percentage}%)</span>
-                  </td>
-                  <td>
-                    <div class="score-bar-container" style="min-width: 80px;">
-                      <div class="score-bar ${scoreClass}" style="width: ${r.percentage}%"></div>
-                    </div>
-                  </td>
-                  <td>${App.formatTime(r.timeTaken)}</td>
-                  <td>${App.formatDate(r.completedAt)}</td>
-                  <td>
-                    <button class="btn btn-ghost btn-sm" onclick="Results.showDetail('${r.id}')">
-                      👁️ Xem
-                    </button>
-                  </td>
-                </tr>
-              `;
-            }).join('')}
-          </tbody>
-        </table>
-      </div>
-    `;
+                return `
+                  <tr>
+                    <td>${i + 1}</td>
+                    <td style="font-weight: 600; color: var(--text-primary);">${App.escapeHtml(r.userName)}</td>
+                    <td>${App.escapeHtml(r.quizTitle)}</td>
+                    <td>
+                      <span class="badge badge-${badgeClass}">${r.score}/${r.totalQuestions} (${r.percentage}%)</span>
+                    </td>
+                    <td>
+                      <div class="score-bar-container" style="min-width: 80px;">
+                        <div class="score-bar ${scoreClass}" style="width: ${r.percentage}%"></div>
+                      </div>
+                    </td>
+                    <td>${App.formatTime(r.timeTaken)}</td>
+                    <td>${App.formatDate(r.completedAt)}</td>
+                    <td>
+                      <button class="btn btn-ghost btn-sm" onclick="Results.showDetail('${r.id}')">
+                        👁️ Xem
+                      </button>
+                    </td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    container.innerHTML = summaryHtml + detailedHtml;
   }
 
   // ---- Sort ----
