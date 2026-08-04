@@ -35,3 +35,4 @@
 | loc.pham@rincovitch.com.au | `kS6%rJ3^cW8$` |
 | tien.tran@rincovitch.com.au | `hL1&mG9*vP5@` |
 | anh.nguyen@rincovitch.com.au | `jB5#dC2%qT7^` |
+| test.user@rincovitch.com.au (Tài khoản Test) | `TestUser123!` |

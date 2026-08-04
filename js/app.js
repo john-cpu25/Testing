@@ -61,40 +61,45 @@ const App = (() => {
   }
 
   function initDefaultAccounts() {
-    const accounts = getAccounts();
-    // Re-initialize if the old default accounts are still present
-    if (accounts.length > 10) return;
+    let accounts = getAccounts();
+    const hasTestUser = accounts.find(a => a.username === 'test.user@rincovitch.com.au');
+    
+    // Re-initialize or inject test user if needed
+    if (accounts.length <= 10 || !hasTestUser) {
+      const defaultAccounts = [
+        { id: generateId(), username: 'vu.donguyen@rincovitch.com.au', password: 'A9#bK2!mL7$xP4^q', displayName: 'Vu Do Nguyen', role: 'admin', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'nhan.nguyen@rincovitch.com.au', password: 'T3@vR8*cN5%jW2&y', displayName: 'Nhan Nguyen', role: 'admin', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'assistant@rincovitch.com.au', password: 'Q7$fD1^mB9#gX6!k', displayName: 'Assistant', role: 'admin', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'admin@rincovitch.com.au', password: 'W5#sR9!pF2^kM7&c', displayName: 'Web Admin', role: 'admin', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'bao.pham@rincovitch.com.au', password: 'vC6&mZ1*gK4@', displayName: 'Bao Pham', role: 'user', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'trung.thenguyen@rincovitch.com.au', password: 'bL8#nJ2%dT5^', displayName: 'Trung The Nguyen', role: 'user', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'duc.pham@rincovitch.com.au', password: 'fQ4$rP9&sW3*', displayName: 'Duc Pham', role: 'user', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'dung.do@rincovitch.com.au', password: 'yK1@tM6!xH8#', displayName: 'Dung Do', role: 'user', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'nhan.pham@rincovitch.com.au', password: 'jN7%cH2^vD5$', displayName: 'Nhan Pham', role: 'user', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'ngan.tran@rincovitch.com.au', password: 'mF3&wL9*pB1@', displayName: 'Ngan Tran', role: 'user', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'ky.phan@rincovitch.com.au', password: 'sT8#kX4%rZ6^', displayName: 'Ky Phan', role: 'user', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'son.lam@rincovitch.com.au', password: 'qD5$vG1&nC9*', displayName: 'Son Lam', role: 'user', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'linh.huynh@rincovitch.com.au', password: 'gW2@bY7!mL3#', displayName: 'Linh Huynh', role: 'user', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'khanh.nguyen@rincovitch.com.au', password: 'xP6%jF4^hT8$', displayName: 'Khanh Nguyen', role: 'user', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'quan.nguyen@rincovitch.com.au', password: 'cK9&nR2*dQ5@', displayName: 'Quan Nguyen', role: 'user', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'tam.phan@rincovitch.com.au', password: 'wM1#yS7%vB4^', displayName: 'Tam Phan', role: 'user', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'khang.trinh@rincovitch.com.au', password: 'tH5$pC3&kL9*', displayName: 'Khang Trinh', role: 'user', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'nguyen.ly@rincovitch.com.au', password: 'nZ8@fD2!rX6#', displayName: 'Nguyen Ly', role: 'user', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'khiem.nguyen@rincovitch.com.au', password: 'bF4%mK9^jW1$', displayName: 'Khiem Nguyen', role: 'user', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'nam.le@rincovitch.com.au', password: 'dY7&gP3*sN5@', displayName: 'Nam Le', role: 'user', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'Hoang.Pham@rincovitch.com.au', password: 'vT2#cQ8%hR4^', displayName: 'Hoang Pham', role: 'user', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'trung.nguyen@rincovitch.com.au', password: 'lM9$wB1&yK6*', displayName: 'Trung Nguyen', role: 'user', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'cuong.pham@rincovitch.com.au', password: 'pX4@nT7!fD2#', displayName: 'Cuong Pham', role: 'user', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'loc.pham@rincovitch.com.au', password: 'kS6%rJ3^cW8$', displayName: 'Loc Pham', role: 'user', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'tien.tran@rincovitch.com.au', password: 'hL1&mG9*vP5@', displayName: 'Tien Tran', role: 'user', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'anh.nguyen@rincovitch.com.au', password: 'jB5#dC2%qT7^', displayName: 'Anh Nguyen', role: 'user', createdAt: new Date().toISOString() },
+        { id: generateId(), username: 'test.user@rincovitch.com.au', password: 'TestUser123!', displayName: 'Test User', role: 'user', createdAt: new Date().toISOString() }
+      ];
 
-    const defaultAccounts = [
-      { id: generateId(), username: 'vu.donguyen@rincovitch.com.au', password: 'A9#bK2!mL7$xP4^q', displayName: 'Vu Do Nguyen', role: 'admin', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'nhan.nguyen@rincovitch.com.au', password: 'T3@vR8*cN5%jW2&y', displayName: 'Nhan Nguyen', role: 'admin', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'assistant@rincovitch.com.au', password: 'Q7$fD1^mB9#gX6!k', displayName: 'Assistant', role: 'admin', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'admin@rincovitch.com.au', password: 'W5#sR9!pF2^kM7&c', displayName: 'Web Admin', role: 'admin', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'bao.pham@rincovitch.com.au', password: 'vC6&mZ1*gK4@', displayName: 'Bao Pham', role: 'user', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'trung.thenguyen@rincovitch.com.au', password: 'bL8#nJ2%dT5^', displayName: 'Trung The Nguyen', role: 'user', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'duc.pham@rincovitch.com.au', password: 'fQ4$rP9&sW3*', displayName: 'Duc Pham', role: 'user', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'dung.do@rincovitch.com.au', password: 'yK1@tM6!xH8#', displayName: 'Dung Do', role: 'user', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'nhan.pham@rincovitch.com.au', password: 'jN7%cH2^vD5$', displayName: 'Nhan Pham', role: 'user', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'ngan.tran@rincovitch.com.au', password: 'mF3&wL9*pB1@', displayName: 'Ngan Tran', role: 'user', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'ky.phan@rincovitch.com.au', password: 'sT8#kX4%rZ6^', displayName: 'Ky Phan', role: 'user', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'son.lam@rincovitch.com.au', password: 'qD5$vG1&nC9*', displayName: 'Son Lam', role: 'user', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'linh.huynh@rincovitch.com.au', password: 'gW2@bY7!mL3#', displayName: 'Linh Huynh', role: 'user', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'khanh.nguyen@rincovitch.com.au', password: 'xP6%jF4^hT8$', displayName: 'Khanh Nguyen', role: 'user', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'quan.nguyen@rincovitch.com.au', password: 'cK9&nR2*dQ5@', displayName: 'Quan Nguyen', role: 'user', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'tam.phan@rincovitch.com.au', password: 'wM1#yS7%vB4^', displayName: 'Tam Phan', role: 'user', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'khang.trinh@rincovitch.com.au', password: 'tH5$pC3&kL9*', displayName: 'Khang Trinh', role: 'user', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'nguyen.ly@rincovitch.com.au', password: 'nZ8@fD2!rX6#', displayName: 'Nguyen Ly', role: 'user', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'khiem.nguyen@rincovitch.com.au', password: 'bF4%mK9^jW1$', displayName: 'Khiem Nguyen', role: 'user', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'nam.le@rincovitch.com.au', password: 'dY7&gP3*sN5@', displayName: 'Nam Le', role: 'user', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'Hoang.Pham@rincovitch.com.au', password: 'vT2#cQ8%hR4^', displayName: 'Hoang Pham', role: 'user', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'trung.nguyen@rincovitch.com.au', password: 'lM9$wB1&yK6*', displayName: 'Trung Nguyen', role: 'user', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'cuong.pham@rincovitch.com.au', password: 'pX4@nT7!fD2#', displayName: 'Cuong Pham', role: 'user', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'loc.pham@rincovitch.com.au', password: 'kS6%rJ3^cW8$', displayName: 'Loc Pham', role: 'user', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'tien.tran@rincovitch.com.au', password: 'hL1&mG9*vP5@', displayName: 'Tien Tran', role: 'user', createdAt: new Date().toISOString() },
-      { id: generateId(), username: 'anh.nguyen@rincovitch.com.au', password: 'jB5#dC2%qT7^', displayName: 'Anh Nguyen', role: 'user', createdAt: new Date().toISOString() }
-    ];
-
-    saveAccounts(defaultAccounts);
+      const newAccounts = defaultAccounts.filter(defAcc => !accounts.find(a => a.username === defAcc.username));
+      accounts = [...accounts, ...newAccounts];
+      saveAccounts(accounts);
+    }
   }
 
   function getCurrentUser() {
