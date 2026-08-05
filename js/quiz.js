@@ -17,8 +17,8 @@ const Quiz = (() => {
   let quizStartTime = 0;
 
   // ---- Render Quiz Selection ----
-  function renderSelection() {
-    const quizzes = App.getQuizzes();
+  async function renderSelection() {
+    const quizzes = await App.getQuizzes();
     const container = document.getElementById('quizContent');
 
     const availableQuizzes = quizzes.filter(q => q.questions.length > 0);
@@ -61,8 +61,8 @@ const Quiz = (() => {
   }
 
   // ---- Start Entry (name input) ----
-  function startEntry(quizId) {
-    const quizzes = App.getQuizzes();
+  async function startEntry(quizId) {
+    const quizzes = await App.getQuizzes();
     const quiz = quizzes.find(q => q.id === quizId);
     if (!quiz) return;
 
@@ -330,7 +330,7 @@ const Quiz = (() => {
     }
   }
 
-  function submitQuiz() {
+  async function submitQuiz() {
     stopTimer();
 
     const timeTaken = Math.round((Date.now() - quizStartTime) / 1000);
@@ -368,9 +368,7 @@ const Quiz = (() => {
     };
 
     // Save result
-    const results = App.getResults();
-    results.push(result);
-    App.saveResults(results);
+    await App.saveResult(result);
 
     // Show results
     showQuizResult(result);

@@ -6,8 +6,8 @@
 const Admin = (() => {
 
   // ---- Render Admin View ----
-  function render() {
-    const quizzes = App.getQuizzes();
+  async function render() {
+    const quizzes = await App.getQuizzes();
 
     const container = document.getElementById('adminQuizList');
 
@@ -128,7 +128,7 @@ const Admin = (() => {
   }
 
   // ---- Save New Quiz ----
-  function saveNewQuiz() {
+  async function saveNewQuiz() {
     const title = document.getElementById('quizTitle').value.trim();
     const description = document.getElementById('quizDescription').value.trim();
     const timeLimit = parseInt(document.getElementById('quizTimeLimit').value) || 15;
@@ -148,20 +148,18 @@ const Admin = (() => {
       createdAt: new Date().toISOString()
     };
 
-    const quizzes = App.getQuizzes();
-    quizzes.push(quiz);
-    App.saveQuizzes(quizzes);
+    await App.saveQuiz(quiz);
 
     App.closeModal();
-    render();
+    await render();
 
     // Immediately open add question dialog
     setTimeout(() => addQuestion(quiz.id), 300);
   }
 
   // ---- Edit Quiz ----
-  function editQuiz(quizId) {
-    const quizzes = App.getQuizzes();
+  async function editQuiz(quizId) {
+    const quizzes = await App.getQuizzes();
     const quiz = quizzes.find(q => q.id === quizId);
     if (!quiz) return;
 
@@ -188,7 +186,7 @@ const Admin = (() => {
     App.openModal('Chỉnh Sửa Quiz', bodyHtml, footerHtml);
   }
 
-  function saveEditQuiz(quizId) {
+  async function saveEditQuiz(quizId) {
     const title = document.getElementById('editQuizTitle').value.trim();
     const description = document.getElementById('editQuizDescription').value.trim();
     const timeLimit = parseInt(document.getElementById('editQuizTimeLimit').value) || 15;
@@ -198,7 +196,7 @@ const Admin = (() => {
       return;
     }
 
-    const quizzes = App.getQuizzes();
+    const quizzes = await App.getQuizzes();
     const idx = quizzes.findIndex(q => q.id === quizId);
     if (idx === -1) return;
 
@@ -206,14 +204,14 @@ const Admin = (() => {
     quizzes[idx].description = description;
     quizzes[idx].timeLimit = Math.max(1, Math.min(180, timeLimit));
 
-    App.saveQuizzes(quizzes);
+    await App.saveQuiz(quizzes[idx]);
     App.closeModal();
-    render();
+    await render();
   }
 
   // ---- Delete Quiz ----
-  function deleteQuiz(quizId) {
-    const quizzes = App.getQuizzes();
+  async function deleteQuiz(quizId) {
+    const quizzes = await App.getQuizzes();
     const quiz = quizzes.find(q => q.id === quizId);
     if (!quiz) return;
 
@@ -234,18 +232,13 @@ const Admin = (() => {
     App.openModal('Xác Nhận Xóa', bodyHtml, footerHtml);
   }
 
-  function confirmDeleteQuiz(quizId) {
-    let quizzes = App.getQuizzes();
-    quizzes = quizzes.filter(q => q.id !== quizId);
-    App.saveQuizzes(quizzes);
-
-    // Also remove related results
-    let results = App.getResults();
-    results = results.filter(r => r.quizId !== quizId);
-    App.saveResults(results);
-
+  async function confirmDeleteQuiz(quizId) {
+    await App.deleteQuiz(quizId);
+    
+    // Note: results will be deleted via ON DELETE CASCADE in Supabase
+    
     App.closeModal();
-    render();
+    await render();
   }
 
   // ---- Add Question ----
@@ -297,7 +290,7 @@ const Admin = (() => {
   }
 
   // ---- Save Question ----
-  function saveQuestion(quizId, addMore) {
+  async function saveQuestion(quizId, addMore) {
     const text = document.getElementById('questionText').value.trim();
     const optA = document.getElementById('optionA').value.trim();
     const optB = document.getElementById('optionB').value.trim();
@@ -317,12 +310,12 @@ const Admin = (() => {
       correctIndex: correct
     };
 
-    const quizzes = App.getQuizzes();
+    const quizzes = await App.getQuizzes();
     const idx = quizzes.findIndex(q => q.id === quizId);
     if (idx === -1) return;
 
     quizzes[idx].questions.push(question);
-    App.saveQuizzes(quizzes);
+    await App.saveQuiz(quizzes[idx]);
 
     if (addMore) {
       // Clear form for next question
@@ -333,16 +326,16 @@ const Admin = (() => {
       document.getElementById('optionD').value = '';
       document.getElementById('correctAnswer').value = '0';
       document.getElementById('questionText').focus();
-      render(); // Update background
+      await render(); // Update background
     } else {
       App.closeModal();
-      render();
+      await render();
     }
   }
 
   // ---- Edit Question ----
-  function editQuestion(quizId, questionId) {
-    const quizzes = App.getQuizzes();
+  async function editQuestion(quizId, questionId) {
+    const quizzes = await App.getQuizzes();
     const quiz = quizzes.find(q => q.id === quizId);
     if (!quiz) return;
     const question = quiz.questions.find(q => q.id === questionId);
@@ -388,7 +381,7 @@ const Admin = (() => {
     App.openModal('Chỉnh Sửa Câu Hỏi', bodyHtml, footerHtml);
   }
 
-  function saveEditQuestion(quizId, questionId) {
+  async function saveEditQuestion(quizId, questionId) {
     const text = document.getElementById('editQuestionText').value.trim();
     const optA = document.getElementById('editOptionA').value.trim();
     const optB = document.getElementById('editOptionB').value.trim();
@@ -401,7 +394,7 @@ const Admin = (() => {
       return;
     }
 
-    const quizzes = App.getQuizzes();
+    const quizzes = await App.getQuizzes();
     const quizIdx = quizzes.findIndex(q => q.id === quizId);
     if (quizIdx === -1) return;
 
@@ -415,22 +408,22 @@ const Admin = (() => {
       correctIndex: correct
     };
 
-    App.saveQuizzes(quizzes);
+    await App.saveQuiz(quizzes[quizIdx]);
     App.closeModal();
-    render();
+    await render();
   }
 
   // ---- Delete Question ----
-  function deleteQuestion(quizId, questionId) {
+  async function deleteQuestion(quizId, questionId) {
     if (!confirm('Bạn có chắc muốn xóa câu hỏi này?')) return;
 
-    const quizzes = App.getQuizzes();
+    const quizzes = await App.getQuizzes();
     const quizIdx = quizzes.findIndex(q => q.id === quizId);
     if (quizIdx === -1) return;
 
     quizzes[quizIdx].questions = quizzes[quizIdx].questions.filter(q => q.id !== questionId);
-    App.saveQuizzes(quizzes);
-    render();
+    await App.saveQuiz(quizzes[quizIdx]);
+    await render();
   }
 
   // Public API

@@ -11,8 +11,8 @@ const Results = (() => {
   let searchQuery = '';
 
   // ---- Get filtered results based on role ----
-  function getFilteredResults() {
-    let results = App.getResults();
+  async function getFilteredResults() {
+    let results = await App.getResults();
     const user = App.getCurrentUser();
     // Non-admin users only see their own results
     if (user && user.role !== 'admin') {
@@ -22,7 +22,7 @@ const Results = (() => {
   }
 
   // ---- Render Results View ----
-  function render() {
+  async function render() {
     const user = App.getCurrentUser();
     const isAdmin = user && user.role === 'admin';
 
@@ -34,14 +34,14 @@ const Results = (() => {
       ? 'Xem và phân tích kết quả tất cả bài test'
       : 'Xem lại các bài test bạn đã làm';
 
-    renderStats();
-    renderFilterBar();
-    renderTable();
+    await renderStats();
+    await renderFilterBar();
+    await renderTable();
   }
 
   // ---- Stats ----
-  function renderStats() {
-    const results = getFilteredResults();
+  async function renderStats() {
+    const results = await getFilteredResults();
 
     if (results.length === 0) {
       document.getElementById('resultsStats').innerHTML = '';
@@ -84,8 +84,8 @@ const Results = (() => {
   }
 
   // ---- Filter Bar ----
-  function renderFilterBar() {
-    const quizzes = App.getQuizzes();
+  async function renderFilterBar() {
+    const quizzes = await App.getQuizzes();
 
     const isAdmin = App.isAdmin();
 
@@ -99,9 +99,6 @@ const Results = (() => {
       ${isAdmin ? `
         <input type="text" class="form-input" id="searchInput" placeholder="🔍 Tìm theo tên người làm..."
                value="${App.escapeHtml(searchQuery)}" oninput="Results.setSearch(this.value)">
-        <button class="btn btn-danger btn-sm" onclick="Results.clearAllResults()" title="Xóa tất cả kết quả">
-          🗑️ Xóa Tất Cả
-        </button>
       ` : ''}
     `;
   }
@@ -180,8 +177,8 @@ const Results = (() => {
   }
 
   // ---- Render Table ----
-  function renderTable() {
-    let results = getFilteredResults();
+  async function renderTable() {
+    let results = await getFilteredResults();
 
     // Filter
     if (currentFilter !== 'all') {
@@ -305,31 +302,31 @@ const Results = (() => {
   }
 
   // ---- Sort ----
-  function setSort(field) {
+  async function setSort(field) {
     if (currentSort === field) {
       sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
     } else {
       currentSort = field;
       sortDirection = 'desc';
     }
-    renderTable();
+    await renderTable();
   }
 
   // ---- Filter ----
-  function setFilter(value) {
+  async function setFilter(value) {
     currentFilter = value;
-    renderTable();
+    await renderTable();
   }
 
   // ---- Search ----
-  function setSearch(value) {
+  async function setSearch(value) {
     searchQuery = value;
-    renderTable();
+    await renderTable();
   }
 
   // ---- Show Detail ----
-  function showDetail(resultId) {
-    const results = App.getResults();
+  async function showDetail(resultId) {
+    const results = await App.getResults();
     const result = results.find(r => r.id === resultId);
     if (!result) return;
 
@@ -402,34 +399,13 @@ const Results = (() => {
   }
 
   // ---- Clear All Results ----
-  function clearAllResults() {
-    const results = App.getResults();
-    if (results.length === 0) {
-      alert('Không có kết quả nào để xóa.');
-      return;
-    }
-
-    const bodyHtml = `
-      <p style="color: var(--text-secondary); margin-bottom: var(--spacing-md);">
-        Bạn có chắc chắn muốn xóa <strong style="color: var(--accent-red);">tất cả ${results.length} kết quả</strong>?
-      </p>
-      <p style="color: var(--accent-red); font-size: var(--font-size-sm);">
-        ⚠️ Hành động này không thể hoàn tác!
-      </p>
-    `;
-
-    const footerHtml = `
-      <button class="btn btn-secondary" onclick="App.closeModal()">Hủy</button>
-      <button class="btn btn-danger" onclick="Results.confirmClearAll()">🗑️ Xóa Tất Cả</button>
-    `;
-
-    App.openModal('Xác Nhận Xóa', bodyHtml, footerHtml);
+  async function clearAllResults() {
+    alert("Tính năng này đã bị vô hiệu hóa.");
   }
 
-  function confirmClearAll() {
-    App.saveResults([]);
+  async function confirmClearAll() {
     App.closeModal();
-    render();
+    await render();
   }
 
   // Public API

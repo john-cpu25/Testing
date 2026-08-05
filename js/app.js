@@ -32,74 +32,147 @@ const App = (() => {
     return shuffled;
   }
 
+  // ---- Supabase Initialization ----
+  const supabaseUrl = 'https://ejyirnfxuezipogweybo.supabase.co';
+  const supabaseKey = 'sb_publishable_r1DKG_nf_nyivQgbe6D7YA_zow13__G';
+  const supabase = window.supabase ? window.supabase.createClient(supabaseUrl, supabaseKey) : null;
+
   // ---- Data Access ----
-  function getQuizzes() {
-    return JSON.parse(localStorage.getItem('quizmaster_quizzes') || '[]');
+  async function getQuizzes() {
+    if (!supabase) return [];
+    const { data: quizzes, error } = await supabase
+      .from('quizzes')
+      .select(`*, questions (*)`)
+      .order('created_at', { ascending: false });
+    if (error) {
+      console.error('Error fetching quizzes:', error);
+      return [];
+    }
+    return quizzes.map(q => ({
+      id: q.id,
+      title: q.title,
+      description: q.description,
+      timeLimit: q.time_limit,
+      createdAt: q.created_at,
+      questions: (q.questions || []).map(question => ({
+        id: question.id,
+        quizId: question.quiz_id,
+        text: question.text,
+        options: question.options,
+        correctIndex: question.correct_index,
+        createdAt: question.created_at
+      }))
+    }));
   }
 
-  function saveQuizzes(quizzes) {
-    localStorage.setItem('quizmaster_quizzes', JSON.stringify(quizzes));
+  async function saveQuiz(quiz) {
+    if (!supabase) return;
+    const { data: newQuiz, error: qErr } = await supabase
+      .from('quizzes')
+      .upsert({
+        id: quiz.id,
+        title: quiz.title,
+        description: quiz.description,
+        time_limit: quiz.timeLimit,
+        created_at: quiz.createdAt || new Date().toISOString()
+      })
+      .select()
+      .single();
+    
+    if (qErr) {
+       console.error('Error saving quiz:', qErr);
+       return;
+    }
+
+    if (quiz.questions && quiz.questions.length > 0) {
+      await supabase.from('questions').delete().eq('quiz_id', quiz.id);
+      const questionsToInsert = quiz.questions.map(q => ({
+        id: q.id,
+        quiz_id: quiz.id,
+        text: q.text,
+        options: q.options,
+        correct_index: q.correctIndex
+      }));
+      await supabase.from('questions').insert(questionsToInsert);
+    }
   }
 
-  function getResults() {
-    return JSON.parse(localStorage.getItem('quizmaster_results') || '[]');
+  async function deleteQuiz(id) {
+      if(!supabase) return;
+      await supabase.from('quizzes').delete().eq('id', id);
   }
 
-  function saveResults(results) {
-    localStorage.setItem('quizmaster_results', JSON.stringify(results));
+  async function getResults() {
+    if (!supabase) return [];
+    const { data: results, error } = await supabase
+      .from('results')
+      .select(`
+        *,
+        users ( display_name, email ),
+        quizzes ( title )
+      `)
+      .order('submitted_at', { ascending: false });
+    if (error) {
+      console.error('Error fetching results:', error);
+      return [];
+    }
+    
+    return results.map(r => ({
+      id: r.id,
+      quizId: r.quiz_id,
+      userId: r.user_id,
+      userName: r.users ? r.users.display_name : 'Unknown User',
+      quizTitle: r.quizzes ? r.quizzes.title : 'Unknown Quiz',
+      score: r.score,
+      totalQuestions: r.total_questions,
+      percentage: parseFloat(r.percentage),
+      timeTaken: r.time_taken || 0,
+      answers: r.answers,
+      completedAt: r.submitted_at
+    }));
+  }
+
+  async function saveResult(result) {
+    if (!supabase) return;
+    const { error } = await supabase
+      .from('results')
+      .insert([
+        { 
+          id: result.id,
+          quiz_id: result.quizId,
+          user_id: result.userId, 
+          score: result.score,
+          total_questions: result.totalQuestions,
+          percentage: result.percentage,
+          answers: result.answers,
+          time_taken: result.timeTaken,
+          submitted_at: result.completedAt || new Date().toISOString()
+        }
+      ]);
+    if (error) console.error('Error saving result:', error);
   }
 
   // ============================================
   // AUTH SYSTEM
   // ============================================
-  function getAccounts() {
-    return JSON.parse(localStorage.getItem('quizmaster_accounts') || '[]');
-  }
-
-  function saveAccounts(accounts) {
-    localStorage.setItem('quizmaster_accounts', JSON.stringify(accounts));
-  }
-
-  function initDefaultAccounts() {
-    let accounts = getAccounts();
-    const hasTestUser = accounts.find(a => a.username === 'test.user@rincovitch.com.au');
-    
-    // Re-initialize or inject test user if needed
-    if (accounts.length <= 10 || !hasTestUser) {
-      const defaultAccounts = [
-        { id: generateId(), username: 'vu.donguyen@rincovitch.com.au', password: 'A9#bK2!mL7$xP4^q', displayName: 'Vu Do Nguyen', role: 'admin', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'nhan.nguyen@rincovitch.com.au', password: 'T3@vR8*cN5%jW2&y', displayName: 'Nhan Nguyen', role: 'admin', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'assistant@rincovitch.com.au', password: 'Q7$fD1^mB9#gX6!k', displayName: 'Assistant', role: 'admin', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'admin@rincovitch.com.au', password: 'W5#sR9!pF2^kM7&c', displayName: 'Web Admin', role: 'admin', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'bao.pham@rincovitch.com.au', password: 'vC6&mZ1*gK4@', displayName: 'Bao Pham', role: 'user', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'trung.thenguyen@rincovitch.com.au', password: 'bL8#nJ2%dT5^', displayName: 'Trung The Nguyen', role: 'user', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'duc.pham@rincovitch.com.au', password: 'fQ4$rP9&sW3*', displayName: 'Duc Pham', role: 'user', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'dung.do@rincovitch.com.au', password: 'yK1@tM6!xH8#', displayName: 'Dung Do', role: 'user', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'nhan.pham@rincovitch.com.au', password: 'jN7%cH2^vD5$', displayName: 'Nhan Pham', role: 'user', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'ngan.tran@rincovitch.com.au', password: 'mF3&wL9*pB1@', displayName: 'Ngan Tran', role: 'user', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'ky.phan@rincovitch.com.au', password: 'sT8#kX4%rZ6^', displayName: 'Ky Phan', role: 'user', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'son.lam@rincovitch.com.au', password: 'qD5$vG1&nC9*', displayName: 'Son Lam', role: 'user', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'linh.huynh@rincovitch.com.au', password: 'gW2@bY7!mL3#', displayName: 'Linh Huynh', role: 'user', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'khanh.nguyen@rincovitch.com.au', password: 'xP6%jF4^hT8$', displayName: 'Khanh Nguyen', role: 'user', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'quan.nguyen@rincovitch.com.au', password: 'cK9&nR2*dQ5@', displayName: 'Quan Nguyen', role: 'user', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'tam.phan@rincovitch.com.au', password: 'wM1#yS7%vB4^', displayName: 'Tam Phan', role: 'user', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'khang.trinh@rincovitch.com.au', password: 'tH5$pC3&kL9*', displayName: 'Khang Trinh', role: 'user', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'nguyen.ly@rincovitch.com.au', password: 'nZ8@fD2!rX6#', displayName: 'Nguyen Ly', role: 'user', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'khiem.nguyen@rincovitch.com.au', password: 'bF4%mK9^jW1$', displayName: 'Khiem Nguyen', role: 'user', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'nam.le@rincovitch.com.au', password: 'dY7&gP3*sN5@', displayName: 'Nam Le', role: 'user', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'Hoang.Pham@rincovitch.com.au', password: 'vT2#cQ8%hR4^', displayName: 'Hoang Pham', role: 'user', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'trung.nguyen@rincovitch.com.au', password: 'lM9$wB1&yK6*', displayName: 'Trung Nguyen', role: 'user', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'cuong.pham@rincovitch.com.au', password: 'pX4@nT7!fD2#', displayName: 'Cuong Pham', role: 'user', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'loc.pham@rincovitch.com.au', password: 'kS6%rJ3^cW8$', displayName: 'Loc Pham', role: 'user', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'tien.tran@rincovitch.com.au', password: 'hL1&mG9*vP5@', displayName: 'Tien Tran', role: 'user', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'anh.nguyen@rincovitch.com.au', password: 'jB5#dC2%qT7^', displayName: 'Anh Nguyen', role: 'user', createdAt: new Date().toISOString() },
-        { id: generateId(), username: 'test.user@rincovitch.com.au', password: 'TestUser123!', displayName: 'Test User', role: 'user', createdAt: new Date().toISOString() }
-      ];
-
-      const newAccounts = defaultAccounts.filter(defAcc => !accounts.find(a => a.username === defAcc.username));
-      accounts = [...accounts, ...newAccounts];
-      saveAccounts(accounts);
+  async function getAccounts() {
+    if (!supabase) return [];
+    const { data, error } = await supabase.from('users').select('*');
+    if (error) {
+       console.error('Error fetching accounts:', error);
+       return [];
     }
+    return data.map(u => ({
+      id: u.id,
+      username: u.email,
+      displayName: u.display_name,
+      role: u.role,
+      password: u.password // We added password column to users table
+    }));
+  }
+
+  async function initDefaultAccounts() {
+    // We assume accounts are already created in Supabase users table via SQL script.
   }
 
   function getCurrentUser() {
@@ -121,18 +194,21 @@ const App = (() => {
     return user && user.role === 'admin';
   }
 
-  function login(username, password) {
-    const accounts = getAccounts();
-    const account = accounts.find(a =>
-      a.username === username && a.password === password
-    );
+  async function login(username, password) {
+    if (!supabase) return false;
+    const { data: users, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', username)
+      .eq('password', password);
 
-    if (!account) return false;
+    if (error || !users || users.length === 0) return false;
 
+    const account = users[0];
     const session = {
       id: account.id,
-      username: account.username,
-      displayName: account.displayName,
+      username: account.email,
+      displayName: account.display_name,
       role: account.role
     };
 
@@ -196,7 +272,7 @@ const App = (() => {
     });
   }
 
-  function handleLogin() {
+  async function handleLogin() {
     const username = document.getElementById('loginUsername').value.trim();
     const password = document.getElementById('loginPassword').value.trim();
 
@@ -206,7 +282,7 @@ const App = (() => {
       return;
     }
 
-    const success = login(username, password);
+    const success = await login(username, password);
 
     if (success) {
       showApp();
@@ -221,10 +297,10 @@ const App = (() => {
   // ---- Navigation / Router ----
   let currentView = 'dashboard';
 
-  function navigate(view) {
+  async function navigate(view) {
     // Block admin views for regular users
     if (view === 'admin' && !isAdmin()) {
-      navigate('quiz');
+      await navigate('quiz');
       return;
     }
 
@@ -249,25 +325,25 @@ const App = (() => {
     // Render view content
     switch (view) {
       case 'dashboard':
-        renderDashboard();
+        await renderDashboard();
         break;
       case 'admin':
-        if (typeof Admin !== 'undefined') Admin.render();
+        if (typeof Admin !== 'undefined') await Admin.render();
         break;
       case 'quiz':
-        if (typeof Quiz !== 'undefined') Quiz.renderSelection();
+        if (typeof Quiz !== 'undefined') await Quiz.renderSelection();
         break;
       case 'results':
-        if (typeof Results !== 'undefined') Results.render();
+        if (typeof Results !== 'undefined') await Results.render();
         break;
     }
   }
 
   // ---- Dashboard ----
-  function renderDashboard() {
-    const quizzes = getQuizzes();
+  async function renderDashboard() {
+    const quizzes = await getQuizzes();
     const user = getCurrentUser();
-    let results = getResults();
+    let results = await getResults();
 
     // User only sees their own results on dashboard
     if (user && user.role !== 'admin') {
@@ -444,20 +520,18 @@ const App = (() => {
   }
 
   // ---- Sample Data ----
-  function initSampleData() {
-    let quizzes = getQuizzes();
+  async function initSampleData() {
+    let quizzes = await getQuizzes();
 
     // Loại bỏ bài test mẫu "Kiến Thức Tổng Hợp" nếu có
-    quizzes = quizzes.filter(q => q.title !== 'Kiến Thức Tổng Hợp');
+    // quizzes = quizzes.filter(q => q.title !== 'Kiến Thức Tổng Hợp'); // Currently not implemented for Supabase to delete this way without an ID
 
     // Đảm bảo bài test Rincovitch luôn tồn tại
     const hasRincovitch = quizzes.some(q => q.title === 'Nội Quy Lao Động - Công Ty Rincovitch');
     if (!hasRincovitch) {
       const rincovitchQuiz = _createRincovitchQuiz();
-      quizzes.push(rincovitchQuiz);
+      await saveQuiz(rincovitchQuiz);
     }
-    
-    saveQuizzes(quizzes);
   }
 
   function _createRincovitchQuiz() {
@@ -793,9 +867,9 @@ const App = (() => {
 
 
 
-  function init() {
-    initDefaultAccounts();
-    initSampleData();
+  async function init() {
+    await initDefaultAccounts();
+    await initSampleData();
 
     // Login form handler
     const loginForm = document.getElementById('loginForm');
@@ -861,9 +935,10 @@ const App = (() => {
     shuffleArray,
     escapeHtml,
     getQuizzes,
-    saveQuizzes,
+    saveQuiz,
+    deleteQuiz,
     getResults,
-    saveResults,
+    saveResult,
     getAccounts,
     navigate,
     openModal,
