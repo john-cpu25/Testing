@@ -263,7 +263,10 @@ const App = (() => {
         <div class="user-name">${escapeHtml(user.displayName)}</div>
         <div class="user-role-badge ${badgeClass}">${roleName}</div>
       </div>
-      <button class="btn-logout" onclick="App.logout()" title="Đăng xuất">🚪</button>
+      <div style="display: flex; flex-direction: column; gap: 5px; justify-content: center;">
+        <button class="btn-logout" style="background-color: var(--bg-card); color: var(--text-secondary);" onclick="App.showChangePasswordModal()" title="Đổi mật khẩu">🔑</button>
+        <button class="btn-logout" onclick="App.logout()" title="Đăng xuất">🚪</button>
+      </div>
     `;
 
     // Show/hide admin-only elements
@@ -495,6 +498,79 @@ const App = (() => {
 
   function closeModal() {
     document.getElementById('modalOverlay').classList.remove('active');
+  }
+
+  // ---- Change Password ----
+  function showChangePasswordModal() {
+    const bodyHtml = `
+      <div class="form-group">
+        <label class="form-label">Mật khẩu hiện tại</label>
+        <input type="password" class="form-input" id="oldPassword" placeholder="Nhập mật khẩu hiện tại...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mật khẩu mới</label>
+        <input type="password" class="form-input" id="newPassword" placeholder="Nhập mật khẩu mới...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Xác nhận mật khẩu mới</label>
+        <input type="password" class="form-input" id="confirmPassword" placeholder="Nhập lại mật khẩu mới...">
+      </div>
+    `;
+
+    const footerHtml = `
+      <button class="btn btn-secondary" onclick="App.closeModal()">Hủy</button>
+      <button class="btn btn-primary" onclick="App.submitChangePassword()">💾 Cập Nhật</button>
+    `;
+
+    openModal('Đổi Mật Khẩu', bodyHtml, footerHtml);
+  }
+
+  async function submitChangePassword() {
+    const oldPassword = document.getElementById('oldPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    if (!oldPassword || !newPassword || !confirmPassword) {
+      alert('Vui lòng nhập đầy đủ thông tin!');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      alert('Mật khẩu mới và xác nhận không khớp!');
+      return;
+    }
+
+    const user = getCurrentUser();
+    if (!user) return;
+
+    if (!supabase) return;
+
+    // Verify old password
+    const { data: users, error: selectError } = await supabase
+      .from('users')
+      .select('id')
+      .eq('email', user.username)
+      .eq('password', oldPassword);
+
+    if (selectError || !users || users.length === 0) {
+      alert('Mật khẩu hiện tại không đúng!');
+      return;
+    }
+
+    // Update new password
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({ password: newPassword })
+      .eq('email', user.username);
+
+    if (updateError) {
+      alert('Có lỗi xảy ra khi cập nhật mật khẩu!');
+      console.error(updateError);
+      return;
+    }
+
+    alert('Đổi mật khẩu thành công!');
+    closeModal();
   }
 
   // ---- Confetti ----
@@ -953,6 +1029,8 @@ const App = (() => {
     logout,
     fillLogin,
     handleLogin,
+    showChangePasswordModal,
+    submitChangePassword,
     get currentView() { return currentView; }
   };
 })();
