@@ -354,10 +354,13 @@ const Quiz = (() => {
 
     const percentage = Math.round((score / shuffledQuestions.length) * 100);
 
+    const currentUser = App.getCurrentUser();
+
     const result = {
       id: App.generateId(),
       quizId: currentQuiz.id,
       quizTitle: currentQuiz.title,
+      userId: currentUser ? currentUser.id : null,
       userName,
       score,
       totalQuestions: shuffledQuestions.length,
