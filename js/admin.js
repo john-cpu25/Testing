@@ -85,9 +85,9 @@ const Admin = (() => {
         <div class="question-item-text">${App.escapeHtml(question.text)}</div>
         <div class="question-item-options">
           ${question.options.map((opt, i) => `
-            <div class="question-item-option ${i === question.correctIndex ? 'correct' : ''}">
+            <div class="question-item-option ${opt === question.correctAnswer ? 'correct' : ''}">
               <strong>${letters[i]}.</strong> ${App.escapeHtml(opt)}
-              ${i === question.correctIndex ? ' ✅' : ''}
+              ${opt === question.correctAnswer ? ' ✅' : ''}
             </div>
           `).join('')}
         </div>
@@ -267,10 +267,10 @@ const Admin = (() => {
       <div class="form-group">
         <label class="form-label">Đáp án đúng *</label>
         <select class="form-select" id="correctAnswer">
-          <option value="0">A</option>
-          <option value="1">B</option>
-          <option value="2">C</option>
-          <option value="3">D</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="D">D</option>
         </select>
       </div>
     `;
@@ -296,7 +296,12 @@ const Admin = (() => {
     const optB = document.getElementById('optionB').value.trim();
     const optC = document.getElementById('optionC').value.trim();
     const optD = document.getElementById('optionD').value.trim();
-    const correct = parseInt(document.getElementById('correctAnswer').value);
+    const correctLetter = document.getElementById('correctAnswer').value;
+    let correctAnswer = '';
+    if (correctLetter === 'A') correctAnswer = optA;
+    else if (correctLetter === 'B') correctAnswer = optB;
+    else if (correctLetter === 'C') correctAnswer = optC;
+    else if (correctLetter === 'D') correctAnswer = optD;
 
     if (!text || !optA || !optB || !optC || !optD) {
       alert('Vui lòng điền đầy đủ câu hỏi và tất cả đáp án!');
@@ -307,7 +312,7 @@ const Admin = (() => {
       id: App.generateId(),
       text,
       options: [optA, optB, optC, optD],
-      correctIndex: correct
+      correctAnswer: correctAnswer
     };
 
     const quizzes = await App.getQuizzes();
@@ -365,10 +370,10 @@ const Admin = (() => {
       <div class="form-group">
         <label class="form-label">Đáp án đúng *</label>
         <select class="form-select" id="editCorrectAnswer">
-          <option value="0" ${question.correctIndex === 0 ? 'selected' : ''}>A</option>
-          <option value="1" ${question.correctIndex === 1 ? 'selected' : ''}>B</option>
-          <option value="2" ${question.correctIndex === 2 ? 'selected' : ''}>C</option>
-          <option value="3" ${question.correctIndex === 3 ? 'selected' : ''}>D</option>
+          <option value="A" ${question.correctAnswer === question.options[0] ? 'selected' : ''}>A</option>
+          <option value="B" ${question.correctAnswer === question.options[1] ? 'selected' : ''}>B</option>
+          <option value="C" ${question.correctAnswer === question.options[2] ? 'selected' : ''}>C</option>
+          <option value="D" ${question.correctAnswer === question.options[3] ? 'selected' : ''}>D</option>
         </select>
       </div>
     `;
@@ -387,7 +392,12 @@ const Admin = (() => {
     const optB = document.getElementById('editOptionB').value.trim();
     const optC = document.getElementById('editOptionC').value.trim();
     const optD = document.getElementById('editOptionD').value.trim();
-    const correct = parseInt(document.getElementById('editCorrectAnswer').value);
+    const correctLetter = document.getElementById('editCorrectAnswer').value;
+    let correctAnswer = '';
+    if (correctLetter === 'A') correctAnswer = optA;
+    else if (correctLetter === 'B') correctAnswer = optB;
+    else if (correctLetter === 'C') correctAnswer = optC;
+    else if (correctLetter === 'D') correctAnswer = optD;
 
     if (!text || !optA || !optB || !optC || !optD) {
       alert('Vui lòng điền đầy đủ câu hỏi và tất cả đáp án!');
@@ -405,7 +415,7 @@ const Admin = (() => {
       id: questionId,
       text,
       options: [optA, optB, optC, optD],
-      correctIndex: correct
+      correctAnswer: correctAnswer
     };
 
     await App.saveQuiz(quizzes[quizIdx]);

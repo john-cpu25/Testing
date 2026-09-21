@@ -149,10 +149,7 @@ const Quiz = (() => {
         id: q.id,
         text: q.text,
         options: shuffledIndices.map(i => q.options[i]),
-        // Map the correct answer to new position
-        correctIndex: shuffledIndices.indexOf(q.correctIndex),
-        // Store original mapping for reference
-        originalMapping: shuffledIndices
+        correctAnswer: q.correctAnswer
       };
     });
 
@@ -339,15 +336,16 @@ const Quiz = (() => {
     let score = 0;
     const answerDetails = shuffledQuestions.map((q, i) => {
       const selected = userAnswers[i];
-      const isCorrect = selected === q.correctIndex;
+      const selectedAnswerText = selected !== -1 ? q.options[selected] : null;
+      const isCorrect = selectedAnswerText === q.correctAnswer;
       if (isCorrect) score++;
 
       return {
         questionId: q.id,
         questionText: q.text,
         options: q.options,
-        selectedIndex: selected,
-        correctIndex: q.correctIndex,
+        selectedAnswer: selectedAnswerText,
+        correctAnswer: q.correctAnswer,
         isCorrect
       };
     });
@@ -445,16 +443,16 @@ const Quiz = (() => {
                 <div class="review-options">
                   ${a.options.map((opt, j) => {
                     let cls = '';
-                    if (j === a.correctIndex) cls += 'correct-option ';
-                    if (j === a.selectedIndex && !a.isCorrect) cls += 'user-selected ';
-                    if (j === a.selectedIndex && a.isCorrect) cls += 'correct-option ';
+                    if (opt === a.correctAnswer) cls += 'correct-option ';
+                    if (opt === a.selectedAnswer && !a.isCorrect) cls += 'user-selected ';
+                    if (opt === a.selectedAnswer && a.isCorrect) cls += 'correct-option ';
 
                     return `
                       <div class="review-option ${cls}">
                         <strong>${letters[j]}.</strong> ${App.escapeHtml(opt)}
-                        ${j === a.correctIndex ? ' ✅' : ''}
-                        ${j === a.selectedIndex && !a.isCorrect ? ' ❌ (Bạn chọn)' : ''}
-                        ${j === a.selectedIndex && a.isCorrect ? ' (Bạn chọn)' : ''}
+                        ${opt === a.correctAnswer ? ' ✅' : ''}
+                        ${opt === a.selectedAnswer && !a.isCorrect ? ' ❌ (Bạn chọn)' : ''}
+                        ${opt === a.selectedAnswer && a.isCorrect ? ' (Bạn chọn)' : ''}
                       </div>
                     `;
                   }).join('')}

@@ -373,15 +373,15 @@ const Results = (() => {
             <div class="review-options">
               ${a.options.map((opt, j) => {
                 let cls = '';
-                if (j === a.correctIndex) cls += 'correct-option ';
-                if (j === a.selectedIndex && !a.isCorrect) cls += 'user-selected ';
-                if (j === a.selectedIndex && a.isCorrect) cls += 'correct-option ';
+                if (opt === a.correctAnswer) cls += 'correct-option ';
+                if (opt === a.selectedAnswer && !a.isCorrect) cls += 'user-selected ';
+                if (opt === a.selectedAnswer && a.isCorrect) cls += 'correct-option ';
 
                 return `
                   <div class="review-option ${cls}" style="font-size: var(--font-size-xs);">
                     <strong>${letters[j]}.</strong> ${App.escapeHtml(opt)}
-                    ${j === a.correctIndex ? ' ✅' : ''}
-                    ${j === a.selectedIndex && !a.isCorrect ? ' ❌' : ''}
+                    ${opt === a.correctAnswer ? ' ✅' : ''}
+                    ${opt === a.selectedAnswer && !a.isCorrect ? ' ❌' : ''}
                   </div>
                 `;
               }).join('')}

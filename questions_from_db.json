@@ -1,0 +1,379 @@
+[
+  {
+    "id": "90c0723f-88fe-42dc-8205-0974dd02dae4",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Nội quy lao động của Công ty Rincovitch áp dụng đối với đối tượng nào?",
+    "options": [
+      "Tất cả người lao động, bao gồm cả người đang trong thời gian thử việc.",
+      "Người lao động đã làm việc tại công ty trên 01 năm.",
+      "Chỉ dành cho khối kỹ sư và thiết kế (Engineers/Drafters).",
+      "Chỉ dành cho nhân viên chính thức có hợp đồng không xác định thời hạn."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "0f62fbcd-e9e0-4b32-8371-c0e8fee4db12",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Thời gian làm việc tiêu chuẩn trong một tuần của nhân viên là bao nhiêu giờ?",
+    "options": [
+      "48 giờ/tuần.",
+      "35 giờ/tuần.",
+      "44 giờ/tuần.",
+      "40 giờ/tuần."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "da5f8b3a-c970-48e0-b2ce-c2576a26759b",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Thời hạn cuối cùng để cập nhật Timesheet lên hệ thống Total Energy hàng tuần là khi nào?",
+    "options": [
+      "Trước 08:30 Thứ Hai tuần kế tiếp.",
+      "Trước 13:30 Thứ Sáu hàng tuần.",
+      "Trước 17:30 Thứ Sáu hàng tuần.",
+      "Bất cứ lúc nào trong ngày Thứ Bảy."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "0b83f63b-233f-4dc0-a2f4-8efb479d9f9d",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Mục tiêu hiệu suất tối thiểu đối với nhân sự thuộc bộ phận Engineers và Drafters là bao nhiêu?",
+    "options": [
+      "100% hiệu suất.",
+      "85% hiệu suất.",
+      "50% hiệu suất.",
+      "75% hiệu suất."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "bee3fe4b-b9fd-4dda-8f15-cefd950c9cd5",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Tại sao mục tiêu hiệu suất của Senior Structural Engineer lại thấp hơn so với Engineers thông thường?",
+    "options": [
+      "Do họ phải phụ trách kiểm tra chất lượng và hỗ trợ đào tạo kỹ thuật.",
+      "Vì họ có quyền nghỉ ngơi nhiều hơn trong giờ làm việc.",
+      "Do khối lượng dự án của cấp Senior luôn ít hơn cấp Junior.",
+      "Vì họ được phép làm việc ít giờ hơn trong tuần."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "5b409671-a350-4ccf-a928-4014d51f3e74",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Trường hợp nhân viên có hiệu suất dưới mức quy định trong 02 tuần liên tiếp, hình thức xử lý đầu tiên là gì?",
+    "options": [
+      "Chuyển sang bộ phận khác làm việc.",
+      "Trừ lương tháng đó.",
+      "Nhắc nhở và yêu cầu lập kế hoạch cải thiện.",
+      "Sa thải ngay lập tức mà không báo trước."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "563f9154-92b3-4f95-a430-b2d8d46c9f21",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Ai là người có thẩm quyền phê duyệt việc mang tài sản của Công ty ra ngoài?",
+    "options": [
+      "Thư ký hoặc Trợ lý văn phòng.",
+      "Mr. Vu Do - Engineer Team Leader.",
+      "Nhân viên tự quyết định nếu phục vụ công việc tại nhà.",
+      "Bất kỳ nhân sự cấp Senior nào."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "2b48a0b0-967a-44fe-af8d-fd465e835708",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Hành vi nào sau đây bị nghiêm cấm tuyệt đối liên quan đến tài khoản Công ty?",
+    "options": [
+      "Sử dụng tài khoản để trao đổi chuyên môn với đồng nghiệp.",
+      "Thay đổi mật khẩu định kỳ 3 tháng một lần.",
+      "Đăng nhập tài khoản vào thiết bị không thuộc Công ty quản lý.",
+      "Đăng nhập tài khoản trên nhiều trình duyệt khác nhau."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "3bf78912-9095-47f2-b95d-33f664ae247d",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Hình thức kỷ luật nào có thể áp dụng ngay lập tức khi phát hiện nhân viên sử dụng phần mềm crack cho công việc của Công ty?",
+    "options": [
+      "Khiển trách bằng miệng.",
+      "Kỷ luật sa thải và chấm dứt hợp đồng lao động ngay lập tức.",
+      "Tạm đình chỉ công tác 01 tuần để kiểm điểm.",
+      "Yêu cầu nhân viên tự mua bản quyền bằng tiền cá nhân và tiếp tục làm việc."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "16bcd6a0-17e3-43d5-b07a-b6bc6faf743a",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Theo quy định về khu vực cây xanh, nhân viên không được làm điều gì?",
+    "options": [
+      "Ngồi làm việc gần khu vực có nhiều cây xanh.",
+      "Tưới thêm nước sạch cho cây vào mỗi buổi sáng.",
+      "Chụp ảnh khu vực cây xanh để đăng mạng xã hội.",
+      "Tự ý di chuyển vị trí hoặc đổ nước thừa, rác vào chậu cây."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "a0d0125b-53d4-4a57-a0a1-d11915ed64ff",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Nhân viên nên làm gì khi phát hiện tủ thuốc y tế bị thiếu thuốc hoặc vật tư?",
+    "options": [
+      "Báo ngay cho thư ký hoặc trợ lý để xử lý.",
+      "Lấy thuốc từ tủ cá nhân thay thế vào tủ chung.",
+      "Chờ đến kỳ kiểm kê tài sản hàng năm mới thông báo.",
+      "Tự bỏ tiền túi mua bổ sung để đồng nghiệp sử dụng."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "b81d037d-0571-4ca5-af33-bf830b3da059",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Quy định nào sau đây là đúng khi sử dụng lò vi sóng tại khu vực bếp?",
+    "options": [
+      "Có thể để lò hoạt động và đi ra ngoài làm việc khác.",
+      "Cho phép sử dụng các hộp nhựa dùng một lần không chịu nhiệt.",
+      "Có thể hâm nóng trứng nguyên vỏ nếu để công suất thấp.",
+      "Không để vật dụng kim loại, giấy bạc vào lò vi sóng."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "b549280f-55fb-4a43-a806-6d993265a115",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Loại thực phẩm nào sau đây được khuyến cáo hạn chế mang vào văn phòng để kiểm soát mùi?",
+    "options": [
+      "Sầu riêng, mắm tôm, cá khô.",
+      "Cơm trắng và thịt kho thông thường.",
+      "Bánh mì, sữa tươi.",
+      "Trái cây tươi như táo, cam."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "286c3bff-a950-4065-a3a8-13bf019d4d31",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Nhân viên có thời gian làm việc chính thức bao lâu thì bắt đầu được tính hưởng lương tháng 13 (theo tỷ lệ)?",
+    "options": [
+      "Sau 06 tháng làm việc.",
+      "Sau khi làm việc chính thức trên 30 ngày.",
+      "Phải đủ 365 ngày làm việc chính thức.",
+      "Ngay từ ngày đầu tiên thử việc."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "c72fb1af-2f33-4e6f-9d79-3a349569809d",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Công thức tính lương tháng 13 cho nhân viên làm việc chưa đủ 365 ngày là gì?",
+    "options": [
+      "Lương tháng 13 = Lương tháng × 0.5.",
+      "Lương tháng 13 = (Số ngày làm việc chính thức / 365) × Lương tháng.",
+      "Lương tháng 13 = (Số tháng làm việc / 12) × Lương cơ bản.",
+      "Lương tháng 13 = Tổng thu nhập năm / 12."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "11b2dd71-b613-4f8b-9f0d-470df2699dce",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Ngày lễ nào sau đây nhân viên được nghỉ hưởng nguyên lương theo quy định riêng của công ty (khác với quy định chung của Nhà nước)?",
+    "options": [
+      "Ngày thành lập công ty.",
+      "Ngày sinh nhật sếp.",
+      "Ngày Lễ Giáng sinh (25/12).",
+      "Ngày Quốc tế Phụ nữ (08/03)."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "618cb8c0-28fd-47bd-9122-77f13d4bbef1",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Nhân viên có đủ 12 tháng làm việc tại công ty sẽ có bao nhiêu ngày phép năm?",
+    "options": [
+      "20 ngày.",
+      "14 ngày.",
+      "12 ngày.",
+      "15 ngày."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "46253e6d-28c2-480f-9897-7239d9a30c9d",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Quy định về việc cộng dồn ngày phép năm tại Rincovitch như thế nào?",
+    "options": [
+      "Chỉ được cộng dồn tối đa 05 ngày mỗi năm.",
+      "Phép năm không được cộng dồn, sẽ mất nếu không sử dụng hết trong năm.",
+      "Chỉ được cộng dồn nếu có sự đồng ý bằng văn bản của Giám đốc.",
+      "Được cộng dồn ngày phép chưa sử dụng sang năm kế tiếp."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "46ef5a55-af90-45f7-a6f5-989d08e14894",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Khi muốn nghỉ phép từ 03 ngày trở lên, nhân viên phải báo trước bao lâu?",
+    "options": [
+      "Trước 01 tuần.",
+      "Trước ít nhất 01 tháng.",
+      "Trước 02 tuần.",
+      "Trước 03 ngày làm việc."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "dc21d616-ddd5-40c2-b62e-c9bee6ab4cf1",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Lao động nữ sinh đôi được nghỉ thai sản tổng cộng bao nhiêu tháng?",
+    "options": [
+      "06 tháng.",
+      "08 tháng.",
+      "12 tháng.",
+      "07 tháng."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "65065f74-33ea-4e66-ac72-dc42f0e46d58",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Trong trường hợp sinh thường, lao động nam được nghỉ hưởng chế độ thai sản bao nhiêu ngày?",
+    "options": [
+      "07 ngày làm việc.",
+      "10 ngày làm việc.",
+      "03 ngày làm việc.",
+      "05 ngày làm việc."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "688d6f83-a37c-45fe-99b7-73573d05a5c7",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Nhân viên được nghỉ bao nhiêu ngày hưởng đủ lương khi bản thân kết hôn?",
+    "options": [
+      "03 ngày.",
+      "01 ngày.",
+      "02 ngày.",
+      "05 ngày."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "dcbeeb9b-43a3-4e95-856e-0ebb2e4c081e",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Khi muốn ra ngoài vì mục đích cá nhân trong giờ làm việc, nhân viên cần làm gì?",
+    "options": [
+      "Tự đi và sẽ làm bù thời gian đó vào cuối ngày.",
+      "Nhờ đồng nghiệp ngồi cạnh báo lại với quản lý nếu có ai hỏi.",
+      "Phải được sự chấp thuận trước của Engineer Team Leader.",
+      "Chỉ cần ghi chú lại vào Timesheet cuối tuần là được."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "e040c1b5-d776-434c-8014-2e5ce8c287db",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Hình thức thông báo nào là bắt buộc khi nhân viên đến trễ hoặc vắng mặt đột xuất do bệnh?",
+    "options": [
+      "Chờ đến khi khỏe lại rồi mới đến công ty giải thích lý do.",
+      "Gửi email cho bộ phận kế toán.",
+      "Gửi tin nhắn qua mạng xã hội cho bất kỳ đồng nghiệp nào.",
+      "Thông báo ngay cho Engineer Team Leader qua điện thoại."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "3f43e5e3-9884-48eb-b284-68b16ff1b8db",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Công ty có quyền chấm dứt hợp đồng lao động ngay lập tức mà không cần báo trước 30-45 ngày trong trường hợp nào?",
+    "options": [
+      "Khi nhân viên không cải thiện sau cảnh cáo chính thức lần 1.",
+      "Khi nhân viên đi trễ quá 03 lần trong một tháng.",
+      "Khi nhân viên từ chối làm thêm giờ vào ngày nghỉ tuần.",
+      "Khi nhân viên có ý kiến bất đồng với quản lý trong cuộc họp."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "b2cc44aa-1f21-487d-b793-68c061ae7573",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Ai chịu trách nhiệm quản lý nhân sự bên dưới và phân công công việc trực tiếp cho các Senior Structural Engineer?",
+    "options": [
+      "Giám đốc tài chính.",
+      "BIM Manager.",
+      "Engineer Team Leader.",
+      "Thư ký dự án."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "51fa1840-a64d-480f-b180-4b4cac3d71b0",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Việc dán nhãn thực phẩm trong tủ lạnh chung có mục đích gì?",
+    "options": [
+      "Tránh nhầm lẫn hoặc bị vứt bỏ nhầm khi dọn tủ lạnh cuối tuần.",
+      "Để khoe các món ăn ngon với đồng nghiệp.",
+      "Theo quy định bắt buộc của Bộ Y tế về an toàn thực phẩm văn phòng.",
+      "Để tính phí lưu trữ thực phẩm hàng tháng."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "f7192513-d6f0-4dfd-ab30-1791b74c2cea",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Nhân viên nữ trở lại làm việc trước khi hết thời gian nghỉ thai sản cần báo trước bao nhiêu ngày?",
+    "options": [
+      "Báo trước ít nhất 07 ngày.",
+      "Báo trước ít nhất 15 ngày.",
+      "Báo trước ít nhất 03 ngày.",
+      "Không cần báo trước nếu đã hết 04 tháng nghỉ thai sản."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  },
+  {
+    "id": "cffd82fe-cec2-43f3-bdbf-6fd4aad005de",
+    "quiz_id": "be056292-a172-43a4-b81c-9a1846478d3e",
+    "text": "Căn cứ nào sau đây KHÔNG phải là cơ sở chính để xem xét mức lương hàng năm?",
+    "options": [
+      "Kết quả hoạt động của công ty.",
+      "Số lượng con cái của nhân viên.",
+      "Các yếu tố thị trường lao động.",
+      "Hiệu quả công việc tổng thể của nhân viên."
+    ],
+    "created_at": "2026-08-05T05:27:49.367948+00:00",
+    "correct_answer": null
+  }
+]

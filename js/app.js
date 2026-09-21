@@ -183,7 +183,7 @@ const App = (() => {
   }
 
   function getCurrentUser() {
-    const session = sessionStorage.getItem('quizmaster_session');
+    const session = sessionStorage.getItem('ApexTesting_session');
     if (!session) return null;
     try {
       return JSON.parse(session);
@@ -219,12 +219,12 @@ const App = (() => {
       role: account.role
     };
 
-    sessionStorage.setItem('quizmaster_session', JSON.stringify(session));
+    sessionStorage.setItem('ApexTesting_session', JSON.stringify(session));
     return true;
   }
 
   function logout() {
-    sessionStorage.removeItem('quizmaster_session');
+    sessionStorage.removeItem('ApexTesting_session');
     showLoginPage();
   }
 

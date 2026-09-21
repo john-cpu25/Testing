@@ -35,7 +35,7 @@ CREATE TABLE questions (
   quiz_id UUID REFERENCES quizzes(id) ON DELETE CASCADE,
   text TEXT NOT NULL,
   options JSONB NOT NULL,         -- Ví dụ: ["Hà Nội", "HCM", "Đà Nẵng"]
-  correct_index INTEGER NOT NULL, -- Vị trí đáp án đúng (0, 1, 2...)
+  correct_answer TEXT NOT NULL,   -- Nội dung đáp án đúng (ví dụ: "Hà Nội")
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -136,13 +136,13 @@ const { data: newQuestions, error: qsErr } = await supabase
       quiz_id: newQuiz.id, 
       text: 'Câu 1?', 
       options: ['A', 'B', 'C', 'D'], 
-      correct_index: 0 
+      correct_answer: 'A' 
     },
     { 
       quiz_id: newQuiz.id, 
       text: 'Câu 2?', 
       options: ['Đúng', 'Sai'], 
-      correct_index: 1 
+      correct_answer: 'Sai' 
     }
   ]);
 ```
