@@ -49,6 +49,14 @@
 
 ---
 
+## 👥 Tài Khoản Khách (Guest)
+
+| # | Họ Tên | Tên Đăng Nhập / Email | Mật Khẩu | Quyền |
+|---|--------|------------------------|----------|-------|
+| 1 | Guest User | `guest@apexscengineering.com` (hoặc gõ `guest`) | `Guest@123456` | Khách (Làm bài test) |
+
+---
+
 ## 📖 Hướng Dẫn Đăng Nhập
 
 1. Truy cập hệ thống ApexTesting

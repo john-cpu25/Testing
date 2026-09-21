@@ -203,11 +203,21 @@ const App = (() => {
 
   async function login(username, password) {
     if (!supabase) return false;
-    const { data: users, error } = await supabase
+    const u = (username || '').trim();
+    if (!u) return false;
+
+    let query = supabase
       .from('Testing_users')
       .select('*')
-      .eq('email', username)
       .eq('password', password);
+
+    if (u.includes('@')) {
+      query = query.ilike('email', u);
+    } else {
+      query = query.or(`email.ilike.${u},email.ilike.${u}@%`);
+    }
+
+    const { data: users, error } = await query;
 
     if (error || !users || users.length === 0) return false;
 
