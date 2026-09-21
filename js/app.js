@@ -48,8 +48,8 @@ const App = (() => {
   async function getQuizzes() {
     if (!supabase) return [];
     const { data: quizzes, error } = await supabase
-      .from('quizzes')
-      .select(`*, questions (*)`)
+      .from('Testing_quizzes')
+      .select(`*, Testing_questions (*)`)
       .order('created_at', { ascending: false });
     if (error) {
       console.error('Error fetching quizzes:', error);
@@ -61,7 +61,7 @@ const App = (() => {
       description: q.description,
       timeLimit: q.time_limit,
       createdAt: q.created_at,
-      questions: (q.questions || []).map(question => ({
+      questions: (q.Testing_questions || []).map(question => ({
         id: question.id,
         quizId: question.quiz_id,
         text: question.text,
@@ -75,7 +75,7 @@ const App = (() => {
   async function saveQuiz(quiz) {
     if (!supabase) return;
     const { data: newQuiz, error: qErr } = await supabase
-      .from('quizzes')
+      .from('Testing_quizzes')
       .upsert({
         id: quiz.id,
         title: quiz.title,
@@ -92,7 +92,7 @@ const App = (() => {
     }
 
     if (quiz.questions && quiz.questions.length > 0) {
-      await supabase.from('questions').delete().eq('quiz_id', quiz.id);
+      await supabase.from('Testing_questions').delete().eq('quiz_id', quiz.id);
       const questionsToInsert = quiz.questions.map(q => ({
         id: q.id,
         quiz_id: quiz.id,
@@ -100,23 +100,23 @@ const App = (() => {
         options: q.options,
         correct_index: q.correctIndex
       }));
-      await supabase.from('questions').insert(questionsToInsert);
+      await supabase.from('Testing_questions').insert(questionsToInsert);
     }
   }
 
   async function deleteQuiz(id) {
       if(!supabase) return;
-      await supabase.from('quizzes').delete().eq('id', id);
+      await supabase.from('Testing_quizzes').delete().eq('id', id);
   }
 
   async function getResults() {
     if (!supabase) return [];
     const { data: results, error } = await supabase
-      .from('results')
+      .from('Testing_results')
       .select(`
         *,
-        users ( display_name, email ),
-        quizzes ( title )
+        Testing_users ( display_name, email ),
+        Testing_quizzes ( title )
       `)
       .order('submitted_at', { ascending: false });
     if (error) {
@@ -128,8 +128,8 @@ const App = (() => {
       id: r.id,
       quizId: r.quiz_id,
       userId: r.user_id,
-      userName: r.users ? r.users.display_name : 'Unknown User',
-      quizTitle: r.quizzes ? r.quizzes.title : 'Unknown Quiz',
+      userName: r.Testing_users ? r.Testing_users.display_name : 'Unknown User',
+      quizTitle: r.Testing_quizzes ? r.Testing_quizzes.title : 'Unknown Quiz',
       score: r.score,
       totalQuestions: r.total_questions,
       percentage: parseFloat(r.percentage),
@@ -142,7 +142,7 @@ const App = (() => {
   async function saveResult(result) {
     if (!supabase) return;
     const { error } = await supabase
-      .from('results')
+      .from('Testing_results')
       .insert([
         { 
           id: result.id,
@@ -164,7 +164,7 @@ const App = (() => {
   // ============================================
   async function getAccounts() {
     if (!supabase) return [];
-    const { data, error } = await supabase.from('users').select('*');
+    const { data, error } = await supabase.from('Testing_users').select('*');
     if (error) {
        console.error('Error fetching accounts:', error);
        return [];
@@ -204,7 +204,7 @@ const App = (() => {
   async function login(username, password) {
     if (!supabase) return false;
     const { data: users, error } = await supabase
-      .from('users')
+      .from('Testing_users')
       .select('*')
       .eq('email', username)
       .eq('password', password);
@@ -309,7 +309,7 @@ const App = (() => {
 
   async function navigate(view) {
     // Block admin views for regular users
-    if (view === 'admin' && !isAdmin()) {
+    if ((view === 'admin' || view === 'schedule') && !isAdmin()) {
       await navigate('quiz');
       return;
     }
@@ -345,6 +345,9 @@ const App = (() => {
         break;
       case 'results':
         if (typeof Results !== 'undefined') await Results.render();
+        break;
+      case 'schedule':
+        if (typeof Schedule !== 'undefined') await Schedule.render();
         break;
     }
   }
@@ -554,7 +557,7 @@ const App = (() => {
 
     // Verify old password
     const { data: users, error: selectError } = await supabase
-      .from('users')
+      .from('Testing_users')
       .select('id')
       .eq('email', user.username)
       .eq('password', oldPassword);
@@ -566,7 +569,7 @@ const App = (() => {
 
     // Update new password
     const { error: updateError } = await supabase
-      .from('users')
+      .from('Testing_users')
       .update({ password: newPassword })
       .eq('email', user.username);
 

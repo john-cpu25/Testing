@@ -90,6 +90,10 @@
           <span class="nav-icon">🏆</span>
           <span class="nav-text">Kết Quả</span>
         </li>
+        <li class="nav-item admin-only" data-view="schedule" id="navSchedule">
+          <span class="nav-icon">📅</span>
+          <span class="nav-text">Lịch Định Kỳ</span>
+        </li>
       </ul>
 
       <div class="sidebar-footer">
@@ -151,6 +155,25 @@
         </div>
       </section>
 
+      <!-- ========== SCHEDULE VIEW ========== -->
+      <section class="view admin-only" id="scheduleView">
+        <div class="page-header">
+          <h1 class="page-title">📅 Lịch Test Định Kỳ</h1>
+          <p class="page-subtitle">Thiết lập quiz tự động giao theo chu kỳ & nhắc nhở qua email</p>
+        </div>
+
+        <div class="flex justify-between items-center mb-xl">
+          <div></div>
+          <button class="btn btn-primary btn-lg" id="btnCreateSchedule">
+            ➕ Tạo Lịch Mới
+          </button>
+        </div>
+
+        <div id="scheduleList">
+          <!-- Rendered by JS -->
+        </div>
+      </section>
+
       <!-- ========== QUIZ VIEW ========== -->
       <section class="view" id="quizView">
         <div id="quizContent">
@@ -208,6 +231,7 @@
   <script src="js/admin.js?v=2"></script>
   <script src="js/quiz.js?v=2"></script>
   <script src="js/results.js?v=2"></script>
+  <script src="js/schedule.js?v=2"></script>
 
 </body>
 </html>
