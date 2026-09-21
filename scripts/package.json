@@ -1,0 +1,15 @@
+{
+  "name": "apextesting-email-scheduler",
+  "version": "1.0.0",
+  "description": "Automated email notifications for ApexTesting via Microsoft 365 SMTP",
+  "private": true,
+  "scripts": {
+    "send-reminders": "node send-reminders.js",
+    "generate-assignments": "node generate-assignments.js",
+    "test-email": "node test-email.js"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.16",
+    "@supabase/supabase-js": "^2.49.1"
+  }
+}

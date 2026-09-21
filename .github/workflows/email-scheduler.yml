@@ -1,0 +1,71 @@
+name: ApexTesting Email Scheduler
+
+on:
+  schedule:
+    # 00:05 UTC = 07:05 AM VN → Tạo assignments từ lịch định kỳ
+    - cron: '5 0 * * *'
+    # 01:00 UTC = 08:00 AM VN → Gửi nhắc nhở / sắp hết hạn
+    - cron: '0 1 * * *'
+    # 03:00 UTC = 10:00 AM VN → Kiểm tra quá hạn
+    - cron: '0 3 * * *'
+
+  # Cho phép chạy thủ công từ GitHub UI
+  workflow_dispatch:
+    inputs:
+      task:
+        description: 'Chọn tác vụ cần chạy'
+        required: true
+        default: 'both'
+        type: choice
+        options:
+          - generate-assignments
+          - send-reminders
+          - both
+
+jobs:
+  email-scheduler:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 📦 Install dependencies
+        working-directory: ./scripts
+        run: npm install
+
+      # ---- Tạo Assignments (07:05 VN hoặc workflow_dispatch) ----
+      - name: 📅 Generate Assignments
+        if: >
+          github.event.schedule == '5 0 * * *' ||
+          github.event.inputs.task == 'generate-assignments' ||
+          github.event.inputs.task == 'both'
+        working-directory: ./scripts
+        env:
+          SMTP_EMAIL: ${{ secrets.SMTP_EMAIL }}
+          SMTP_APP_PASSWORD: ${{ secrets.SMTP_APP_PASSWORD }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          SITE_URL: ${{ secrets.SITE_URL }}
+        run: node generate-assignments.js
+
+      # ---- Gửi Nhắc Nhở (08:00 & 10:00 VN hoặc workflow_dispatch) ----
+      - name: 📧 Send Reminders
+        if: >
+          github.event.schedule == '0 1 * * *' ||
+          github.event.schedule == '0 3 * * *' ||
+          github.event.inputs.task == 'send-reminders' ||
+          github.event.inputs.task == 'both'
+        working-directory: ./scripts
+        env:
+          SMTP_EMAIL: ${{ secrets.SMTP_EMAIL }}
+          SMTP_APP_PASSWORD: ${{ secrets.SMTP_APP_PASSWORD }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          SITE_URL: ${{ secrets.SITE_URL }}
+        run: node send-reminders.js
