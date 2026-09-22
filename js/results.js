@@ -29,10 +29,10 @@ const Results = (() => {
     // Update page title based on role
     const titleEl = document.getElementById('resultsPageTitle');
     const subtitleEl = document.getElementById('resultsPageSubtitle');
-    if (titleEl) titleEl.textContent = isAdmin ? 'Tổng Hợp Kết Quả' : 'Kết Quả Của Bạn';
+    if (titleEl) titleEl.textContent = isAdmin ? 'Results Overview' : 'Your Results';
     if (subtitleEl) subtitleEl.textContent = isAdmin
-      ? 'Xem và phân tích kết quả tất cả bài test'
-      : 'Xem lại các bài test bạn đã làm';
+      ? 'View and analyze all test results'
+      : 'Review quizzes you have completed';
 
     await renderStats();
     await renderFilterBar();
@@ -58,27 +58,27 @@ const Results = (() => {
       <div class="stat-card purple">
         <div class="stat-icon">📝</div>
         <div class="stat-value">${totalAttempts}</div>
-        <div class="stat-label">Tổng Lượt Làm</div>
+        <div class="stat-label">Total Submissions</div>
       </div>
       <div class="stat-card cyan">
         <div class="stat-icon">📊</div>
         <div class="stat-value">${avgScore}%</div>
-        <div class="stat-label">Điểm Trung Bình</div>
+        <div class="stat-label">Average Score</div>
       </div>
       <div class="stat-card green">
         <div class="stat-icon">🏆</div>
         <div class="stat-value">${highestScore}%</div>
-        <div class="stat-label">Điểm Cao Nhất</div>
+        <div class="stat-label">Highest Score</div>
       </div>
       <div class="stat-card orange">
         <div class="stat-icon">⏱️</div>
         <div class="stat-value">${App.formatTime(avgTime)}</div>
-        <div class="stat-label">Thời Gian TB</div>
+        <div class="stat-label">Average Time</div>
       </div>
       <div class="stat-card pink">
         <div class="stat-icon">✅</div>
         <div class="stat-value">${passRate}%</div>
-        <div class="stat-label">Tỉ Lệ Đạt (≥60%)</div>
+        <div class="stat-label">Pass Rate (≥60%)</div>
       </div>
     `;
   }
@@ -91,13 +91,13 @@ const Results = (() => {
 
     document.getElementById('resultsFilterBar').innerHTML = `
       <select class="form-select" id="filterQuiz" onchange="Results.setFilter(this.value)">
-        <option value="all">📋 Tất cả bài test</option>
+        <option value="all">📋 All Quizzes</option>
         ${quizzes.map(q => `
           <option value="${q.id}" ${currentFilter === q.id ? 'selected' : ''}>${App.escapeHtml(q.title)}</option>
         `).join('')}
       </select>
       ${isAdmin ? `
-        <input type="text" class="form-input" id="searchInput" placeholder="🔍 Tìm theo tên người làm..."
+        <input type="text" class="form-input" id="searchInput" placeholder="🔍 Search by user name..."
                value="${App.escapeHtml(searchQuery)}" oninput="Results.setSearch(this.value)">
       ` : ''}
     `;
@@ -137,38 +137,38 @@ const Results = (() => {
     if (displayList.length === 0) return '';
 
     return `
-      <h3 style="margin-top: 1rem; margin-bottom: 1rem; color: var(--primary);">Tiến Độ Làm Bài (Danh sách theo Email)</h3>
+      <h3 style="margin-top: 1rem; margin-bottom: 1rem; color: var(--primary);">User Assessment Progress (By Email Directory)</h3>
       <div class="table-container" style="margin-bottom: 2rem;">
         <table class="table">
           <thead>
             <tr>
               <th>#</th>
-              <th>Họ Tên</th>
+              <th>Full Name</th>
               <th>Email</th>
-              <th>Trạng Thái</th>
-              <th>Lượt Làm</th>
-              <th>Điểm Cao Nhất</th>
-              <th>Thời Gian Tốt Nhất</th>
+              <th>Status</th>
+              <th>Attempts</th>
+              <th>Highest Score</th>
+              <th>Best Time</th>
             </tr>
           </thead>
           <tbody>
             ${displayList.map((s, i) => {
               const hasTaken = s.attempts > 0;
-              const statusBadge = hasTaken ? '<span class="badge badge-green">Đã Làm</span>' : '<span class="badge badge-red">Chưa Làm</span>';
+              const statusBadge = hasTaken ? '<span class="badge badge-green">Completed</span>' : '<span class="badge badge-red">Not Taken</span>';
               
-              const scoreBadge = hasTaken ? \`<span class="badge badge-\${s.highestScore >= 80 ? 'green' : s.highestScore >= 60 ? 'cyan' : s.highestScore >= 40 ? 'yellow' : 'red'}">\${s.highestScore}%</span>\` : '-';
+              const scoreBadge = hasTaken ? `<span class="badge badge-${s.highestScore >= 80 ? 'green' : s.highestScore >= 60 ? 'cyan' : s.highestScore >= 40 ? 'yellow' : 'red'}">${s.highestScore}%</span>` : '-';
               
-              return \`
+              return `
                 <tr>
-                  <td>\${i + 1}</td>
-                  <td style="font-weight: 600;">\${App.escapeHtml(s.name)}</td>
-                  <td>\${App.escapeHtml(s.email)}</td>
-                  <td>\${statusBadge}</td>
-                  <td>\${s.attempts}</td>
-                  <td>\${scoreBadge}</td>
-                  <td>\${hasTaken ? App.formatTime(s.bestTime) : '-'}</td>
+                  <td>${i + 1}</td>
+                  <td style="font-weight: 600;">${App.escapeHtml(s.name)}</td>
+                  <td>${App.escapeHtml(s.email)}</td>
+                  <td>${statusBadge}</td>
+                  <td>${s.attempts}</td>
+                  <td>${scoreBadge}</td>
+                  <td>${hasTaken ? App.formatTime(s.bestTime) : '-'}</td>
                 </tr>
-              \`;
+              `;
             }).join('')}
           </tbody>
         </table>
@@ -236,8 +236,8 @@ const Results = (() => {
       detailedHtml = `
         <div class="empty-state">
           <div class="empty-state-icon">🏆</div>
-          <div class="empty-state-title">Chưa có kết quả chi tiết nào</div>
-          <div class="empty-state-text">Kết quả sẽ hiển thị khi có người hoàn thành bài test.</div>
+          <div class="empty-state-title">No detailed results found</div>
+          <div class="empty-state-text">Results will appear once users complete a quiz.</div>
         </div>
       `;
     } else {
@@ -249,19 +249,19 @@ const Results = (() => {
       const sortClass = (field) => currentSort === field ? 'sorted' : '';
 
       detailedHtml = `
-        <h3 style="margin-top: 1rem; margin-bottom: 1rem; color: var(--primary);">Chi Tiết Lịch Sử Làm Bài</h3>
+        <h3 style="margin-top: 1rem; margin-bottom: 1rem; color: var(--primary);">Detailed Submission History</h3>
         <div class="table-container">
           <table class="table">
             <thead>
               <tr>
                 <th>#</th>
-                <th class="${sortClass('name')}" onclick="Results.setSort('name')">Người Làm ${sortIcon('name')}</th>
-                <th class="${sortClass('quiz')}" onclick="Results.setSort('quiz')">Bài Test</th>
-                <th class="${sortClass('score')}" onclick="Results.setSort('score')">Điểm ${sortIcon('score')}</th>
-                <th>Kết Quả</th>
-                <th class="${sortClass('time')}" onclick="Results.setSort('time')">Thời Gian ${sortIcon('time')}</th>
-                <th class="${sortClass('date')}" onclick="Results.setSort('date')">Ngày ${sortIcon('date')}</th>
-                <th>Chi Tiết</th>
+                <th class="${sortClass('name')}" onclick="Results.setSort('name')">User ${sortIcon('name')}</th>
+                <th class="${sortClass('quiz')}" onclick="Results.setSort('quiz')">Quiz ${sortIcon('quiz')}</th>
+                <th class="${sortClass('score')}" onclick="Results.setSort('score')">Score ${sortIcon('score')}</th>
+                <th>Performance</th>
+                <th class="${sortClass('time')}" onclick="Results.setSort('time')">Time Taken ${sortIcon('time')}</th>
+                <th class="${sortClass('date')}" onclick="Results.setSort('date')">Date ${sortIcon('date')}</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -286,7 +286,7 @@ const Results = (() => {
                     <td>${App.formatDate(r.completedAt)}</td>
                     <td>
                       <button class="btn btn-ghost btn-sm" onclick="Results.showDetail('${r.id}')">
-                        👁️ Xem
+                        👁️ View
                       </button>
                     </td>
                   </tr>
@@ -350,25 +350,25 @@ const Results = (() => {
       <div class="result-stats mb-xl">
         <div class="result-stat">
           <div class="result-stat-value text-green">${result.score}</div>
-          <div class="result-stat-label">Đúng</div>
+          <div class="result-stat-label">Correct</div>
         </div>
         <div class="result-stat">
           <div class="result-stat-value text-red">${result.totalQuestions - result.score}</div>
-          <div class="result-stat-label">Sai</div>
+          <div class="result-stat-label">Incorrect</div>
         </div>
         <div class="result-stat">
           <div class="result-stat-value text-cyan">${App.formatTime(result.timeTaken)}</div>
-          <div class="result-stat-label">Thời gian</div>
+          <div class="result-stat-label">Time Taken</div>
         </div>
       </div>
 
-      <h4 style="margin-bottom: var(--spacing-md);">📋 Chi Tiết Từng Câu</h4>
+      <h4 style="margin-bottom: var(--spacing-md);">📋 Question Breakdown</h4>
       <div class="review-list">
         ${result.answers.map((a, i) => `
           <div class="review-item ${a.isCorrect ? 'correct-answer' : 'wrong-answer'}">
             <div class="review-question">
               <span class="review-status">${a.isCorrect ? '✅' : '❌'}</span>
-              <span style="font-size: var(--font-size-sm);"><strong>Câu ${i + 1}:</strong> ${App.escapeHtml(a.questionText)}</span>
+              <span style="font-size: var(--font-size-sm);"><strong>Question ${i + 1}:</strong> ${App.escapeHtml(a.questionText)}</span>
             </div>
             <div class="review-options">
               ${a.options.map((opt, j) => {
@@ -392,15 +392,15 @@ const Results = (() => {
     `;
 
     const footerHtml = `
-      <button class="btn btn-secondary" onclick="App.closeModal()">Đóng</button>
+      <button class="btn btn-secondary" onclick="App.closeModal()">Close</button>
     `;
 
-    App.openModal('Chi Tiết Kết Quả', bodyHtml, footerHtml);
+    App.openModal('Results Detail', bodyHtml, footerHtml);
   }
 
   // ---- Clear All Results ----
   async function clearAllResults() {
-    alert("Tính năng này đã bị vô hiệu hóa.");
+    alert("This feature has been disabled.");
   }
 
   async function confirmClearAll() {

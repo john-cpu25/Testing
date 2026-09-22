@@ -9,11 +9,11 @@ const Schedule = (() => {
   const supabase = window.supabase ? window.supabase.createClient(supabaseUrl, supabaseKey) : null;
 
   const FREQUENCY_LABELS = {
-    monthly: '📅 Hàng tháng',
-    quarterly: '📆 3 tháng / lần',
-    biannual: '🗓️ 6 tháng / lần',
-    annual: '📅 Hàng năm',
-    custom: '⚙️ Tùy chỉnh'
+    monthly: '📅 Monthly',
+    quarterly: '📆 Quarterly (3 mos)',
+    biannual: '🗓️ Biannual (6 mos)',
+    annual: '📅 Annual',
+    custom: '⚙️ Custom'
   };
 
   // ---- Fetch Schedules ----
@@ -46,8 +46,8 @@ const Schedule = (() => {
       container.innerHTML = `
         <div class="empty-state">
           <div class="empty-state-icon">📅</div>
-          <div class="empty-state-title">Chưa có lịch định kỳ nào</div>
-          <div class="empty-state-text">Tạo lịch để tự động giao bài test cho nhân viên theo chu kỳ.</div>
+          <div class="empty-state-title">No recurring schedules yet</div>
+          <div class="empty-state-text">Create a schedule to automate quiz assignments and email notifications.</div>
         </div>
       `;
       return;
@@ -57,17 +57,17 @@ const Schedule = (() => {
   }
 
   function renderScheduleCard(schedule) {
-    const quizTitle = schedule.Testing_quizzes ? schedule.Testing_quizzes.title : 'Quiz đã xóa';
+    const quizTitle = schedule.Testing_quizzes ? schedule.Testing_quizzes.title : 'Deleted Quiz';
     const createdBy = schedule.Testing_users ? schedule.Testing_users.display_name : 'Unknown';
     const freqLabel = FREQUENCY_LABELS[schedule.frequency] || schedule.frequency;
     const nextRun = schedule.next_run_at ? App.formatDate(schedule.next_run_at) : '—';
-    const lastRun = schedule.last_run_at ? App.formatDate(schedule.last_run_at) : 'Chưa chạy';
+    const lastRun = schedule.last_run_at ? App.formatDate(schedule.last_run_at) : 'Never run';
     const statusClass = schedule.active ? 'badge-green' : 'badge-red';
-    const statusLabel = schedule.active ? '🟢 Đang hoạt động' : '🔴 Tạm dừng';
+    const statusLabel = schedule.active ? '🟢 Active' : '🔴 Paused';
 
-    const targetLabel = schedule.target_role === 'all' ? 'Tất cả' 
-      : schedule.target_role === 'user' ? 'Nhân viên' 
-      : 'Manager';
+    const targetLabel = schedule.target_role === 'all' ? 'All Roles' 
+      : schedule.target_role === 'user' ? 'Employees' 
+      : 'Managers';
 
     return `
       <div class="card mb-lg" style="animation: slideUp 0.3s ease; border-left: 4px solid ${schedule.active ? 'var(--accent-green)' : 'var(--accent-red)'};">
@@ -75,19 +75,19 @@ const Schedule = (() => {
           <div>
             <h3 class="card-title">${App.escapeHtml(quizTitle)}</h3>
             <p class="text-secondary" style="font-size: var(--font-size-sm); margin-top: 4px;">
-              Tạo bởi ${App.escapeHtml(createdBy)}
+              Created by ${App.escapeHtml(createdBy)}
             </p>
           </div>
           <div class="btn-group">
             <button class="btn ${schedule.active ? 'btn-warning' : 'btn-success'} btn-sm" 
               onclick="Schedule.toggleActive('${schedule.id}', ${!schedule.active})">
-              ${schedule.active ? '⏸️ Tạm dừng' : '▶️ Bật lại'}
+              ${schedule.active ? '⏸️ Pause' : '▶️ Resume'}
             </button>
             <button class="btn btn-secondary btn-sm" onclick="Schedule.editSchedule('${schedule.id}')">
-              ✏️ Sửa
+              ✏️ Edit
             </button>
             <button class="btn btn-danger btn-sm" onclick="Schedule.deleteSchedule('${schedule.id}')">
-              🗑️ Xóa
+              🗑️ Delete
             </button>
           </div>
         </div>
@@ -95,24 +95,24 @@ const Schedule = (() => {
         <div class="flex gap-lg mb-lg" style="flex-wrap: wrap;">
           <span class="badge ${statusClass}">${statusLabel}</span>
           <span class="badge badge-purple">${freqLabel}</span>
-          <span class="badge badge-cyan">⏱️ ${schedule.deadline_days} ngày để hoàn thành</span>
-          <span class="badge badge-orange">🔔 Nhắc trước ${schedule.remind_before_days} ngày</span>
+          <span class="badge badge-cyan">⏱️ ${schedule.deadline_days} days to complete</span>
+          <span class="badge badge-orange">🔔 Remind ${schedule.remind_before_days} days before</span>
           <span class="badge badge-pink">👥 ${targetLabel}</span>
         </div>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-md); padding: var(--spacing-md); background: var(--bg-main); border-radius: var(--radius-md);">
           <div>
-            <div class="text-secondary" style="font-size: var(--font-size-xs); margin-bottom: 4px;">📅 Lần giao tiếp theo</div>
+            <div class="text-secondary" style="font-size: var(--font-size-xs); margin-bottom: 4px;">📅 Next Scheduled Run</div>
             <div style="font-weight: 600; color: var(--text-primary);">${nextRun}</div>
           </div>
           <div>
-            <div class="text-secondary" style="font-size: var(--font-size-xs); margin-bottom: 4px;">🕐 Lần giao gần nhất</div>
+            <div class="text-secondary" style="font-size: var(--font-size-xs); margin-bottom: 4px;">🕐 Last Run</div>
             <div style="font-weight: 600; color: var(--text-primary);">${lastRun}</div>
           </div>
           ${schedule.frequency === 'custom' ? `
           <div>
-            <div class="text-secondary" style="font-size: var(--font-size-xs); margin-bottom: 4px;">🔄 Chu kỳ</div>
-            <div style="font-weight: 600; color: var(--text-primary);">Mỗi ${schedule.interval_days} ngày</div>
+            <div class="text-secondary" style="font-size: var(--font-size-xs); margin-bottom: 4px;">🔄 Interval</div>
+            <div style="font-weight: 600; color: var(--text-primary);">Every ${schedule.interval_days} days</div>
           </div>
           ` : ''}
         </div>
@@ -125,66 +125,66 @@ const Schedule = (() => {
     const quizzes = await App.getQuizzes();
 
     if (quizzes.length === 0) {
-      alert('Chưa có quiz nào! Hãy tạo quiz trước.');
+      alert('No quizzes available! Please create a quiz first.');
       return;
     }
 
     const quizOptions = quizzes.map(q => 
-      `<option value="${q.id}">${App.escapeHtml(q.title)} (${q.questions.length} câu)</option>`
+      `<option value="${q.id}">${App.escapeHtml(q.title)} (${q.questions.length} questions)</option>`
     ).join('');
 
     const bodyHtml = `
       <div class="form-group">
-        <label class="form-label">Chọn bài test *</label>
+        <label class="form-label">Select Quiz *</label>
         <select class="form-select" id="schedQuizId">
           ${quizOptions}
         </select>
       </div>
       <div class="form-group">
-        <label class="form-label">Tần suất lặp lại *</label>
+        <label class="form-label">Repeat Frequency *</label>
         <select class="form-select" id="schedFrequency" onchange="Schedule.onFrequencyChange()">
-          <option value="monthly">Hàng tháng (1 tháng)</option>
-          <option value="quarterly" selected>3 tháng / lần</option>
-          <option value="biannual">6 tháng / lần</option>
-          <option value="annual">Hàng năm</option>
-          <option value="custom">Tùy chỉnh</option>
+          <option value="monthly">Monthly (every month)</option>
+          <option value="quarterly" selected>Quarterly (every 3 months)</option>
+          <option value="biannual">Biannual (every 6 months)</option>
+          <option value="annual">Annual (every year)</option>
+          <option value="custom">Custom interval</option>
         </select>
       </div>
       <div class="form-group hidden" id="customIntervalGroup">
-        <label class="form-label">Số ngày giữa các lần</label>
+        <label class="form-label">Days between runs</label>
         <input type="number" class="form-input" id="schedIntervalDays" value="30" min="1" max="365">
       </div>
       <div class="form-group">
-        <label class="form-label">Số ngày để hoàn thành (deadline) *</label>
+        <label class="form-label">Days to Complete (Deadline) *</label>
         <input type="number" class="form-input" id="schedDeadlineDays" value="7" min="1" max="60">
-        <p class="form-hint">Sau khi giao bài, user có bao nhiêu ngày để nộp</p>
+        <p class="form-hint">Number of days users have to complete the test after assignment</p>
       </div>
       <div class="form-group">
-        <label class="form-label">Nhắc nhở trước deadline (ngày) *</label>
+        <label class="form-label">Reminder before deadline (days) *</label>
         <input type="number" class="form-input" id="schedRemindDays" value="3" min="1" max="30">
-        <p class="form-hint">Gửi email nhắc khi còn X ngày trước hạn nộp</p>
+        <p class="form-hint">Send reminder notification email X days before deadline</p>
       </div>
       <div class="form-group">
-        <label class="form-label">Giao cho ai *</label>
+        <label class="form-label">Assign To *</label>
         <select class="form-select" id="schedTargetRole">
-          <option value="all">Tất cả (user + manager)</option>
-          <option value="user" selected>Chỉ nhân viên (role: user)</option>
-          <option value="manager">Chỉ manager</option>
+          <option value="all">All Roles (Users + Managers)</option>
+          <option value="user" selected>Employees Only (Role: user)</option>
+          <option value="manager">Managers Only</option>
         </select>
       </div>
       <div class="form-group">
-        <label class="form-label">Ngày bắt đầu lần đầu *</label>
+        <label class="form-label">First Run Date *</label>
         <input type="date" class="form-input" id="schedStartDate" value="${getDefaultStartDate()}">
-        <p class="form-hint">Lần giao bài đầu tiên sẽ diễn ra vào ngày này</p>
+        <p class="form-hint">The first batch of assignments will be dispatched on this date</p>
       </div>
     `;
 
     const footerHtml = `
-      <button class="btn btn-secondary" onclick="App.closeModal()">Hủy</button>
-      <button class="btn btn-primary" onclick="Schedule.saveNewSchedule()">📅 Tạo Lịch</button>
+      <button class="btn btn-secondary" onclick="App.closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="Schedule.saveNewSchedule()">📅 Create Schedule</button>
     `;
 
-    App.openModal('Tạo Lịch Test Định Kỳ', bodyHtml, footerHtml);
+    App.openModal('Create Recurring Test Schedule', bodyHtml, footerHtml);
   }
 
   function getDefaultStartDate() {
@@ -214,12 +214,12 @@ const Schedule = (() => {
     const startDate = document.getElementById('schedStartDate').value;
 
     if (!quizId || !startDate) {
-      alert('Vui lòng điền đầy đủ thông tin!');
+      alert('Please fill in all required fields!');
       return;
     }
 
     if (remindDays >= deadlineDays) {
-      alert('Số ngày nhắc nhở phải nhỏ hơn số ngày deadline!');
+      alert('Reminder days must be less than deadline days!');
       return;
     }
 
@@ -241,7 +241,7 @@ const Schedule = (() => {
 
     if (error) {
       console.error('Error creating schedule:', error);
-      alert('Lỗi khi tạo lịch: ' + error.message);
+      alert('Error creating schedule: ' + error.message);
       return;
     }
 
@@ -274,51 +274,51 @@ const Schedule = (() => {
 
     const bodyHtml = `
       <div class="form-group">
-        <label class="form-label">Bài test</label>
+        <label class="form-label">Quiz</label>
         <select class="form-select" id="editSchedQuizId">${quizOptions}</select>
       </div>
       <div class="form-group">
-        <label class="form-label">Tần suất</label>
+        <label class="form-label">Frequency</label>
         <select class="form-select" id="editSchedFrequency" onchange="Schedule.onFrequencyChange()">
-          <option value="monthly" ${schedule.frequency === 'monthly' ? 'selected' : ''}>Hàng tháng</option>
-          <option value="quarterly" ${schedule.frequency === 'quarterly' ? 'selected' : ''}>3 tháng / lần</option>
-          <option value="biannual" ${schedule.frequency === 'biannual' ? 'selected' : ''}>6 tháng / lần</option>
-          <option value="annual" ${schedule.frequency === 'annual' ? 'selected' : ''}>Hàng năm</option>
-          <option value="custom" ${schedule.frequency === 'custom' ? 'selected' : ''}>Tùy chỉnh</option>
+          <option value="monthly" ${schedule.frequency === 'monthly' ? 'selected' : ''}>Monthly</option>
+          <option value="quarterly" ${schedule.frequency === 'quarterly' ? 'selected' : ''}>Quarterly (3 months)</option>
+          <option value="biannual" ${schedule.frequency === 'biannual' ? 'selected' : ''}>Biannual (6 months)</option>
+          <option value="annual" ${schedule.frequency === 'annual' ? 'selected' : ''}>Annual</option>
+          <option value="custom" ${schedule.frequency === 'custom' ? 'selected' : ''}>Custom</option>
         </select>
       </div>
       <div class="form-group ${schedule.frequency !== 'custom' ? 'hidden' : ''}" id="customIntervalGroup">
-        <label class="form-label">Số ngày giữa các lần</label>
+        <label class="form-label">Days between runs</label>
         <input type="number" class="form-input" id="editSchedIntervalDays" value="${schedule.interval_days}" min="1">
       </div>
       <div class="form-group">
-        <label class="form-label">Deadline (ngày)</label>
+        <label class="form-label">Deadline (days)</label>
         <input type="number" class="form-input" id="editSchedDeadlineDays" value="${schedule.deadline_days}" min="1">
       </div>
       <div class="form-group">
-        <label class="form-label">Nhắc trước (ngày)</label>
+        <label class="form-label">Remind before (days)</label>
         <input type="number" class="form-input" id="editSchedRemindDays" value="${schedule.remind_before_days}" min="1">
       </div>
       <div class="form-group">
-        <label class="form-label">Giao cho</label>
+        <label class="form-label">Assign To</label>
         <select class="form-select" id="editSchedTargetRole">
-          <option value="all" ${schedule.target_role === 'all' ? 'selected' : ''}>Tất cả</option>
-          <option value="user" ${schedule.target_role === 'user' ? 'selected' : ''}>Nhân viên</option>
-          <option value="manager" ${schedule.target_role === 'manager' ? 'selected' : ''}>Manager</option>
+          <option value="all" ${schedule.target_role === 'all' ? 'selected' : ''}>All Roles</option>
+          <option value="user" ${schedule.target_role === 'user' ? 'selected' : ''}>Employees</option>
+          <option value="manager" ${schedule.target_role === 'manager' ? 'selected' : ''}>Managers</option>
         </select>
       </div>
       <div class="form-group">
-        <label class="form-label">Lần giao tiếp theo</label>
+        <label class="form-label">Next Scheduled Run</label>
         <input type="date" class="form-input" id="editSchedNextRun" value="${nextRunDate}">
       </div>
     `;
 
     const footerHtml = `
-      <button class="btn btn-secondary" onclick="App.closeModal()">Hủy</button>
-      <button class="btn btn-primary" onclick="Schedule.saveEditSchedule('${scheduleId}')">💾 Lưu</button>
+      <button class="btn btn-secondary" onclick="App.closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="Schedule.saveEditSchedule('${scheduleId}')">💾 Save</button>
     `;
 
-    App.openModal('Chỉnh Sửa Lịch Định Kỳ', bodyHtml, footerHtml);
+    App.openModal('Edit Recurring Schedule', bodyHtml, footerHtml);
   }
 
   async function saveEditSchedule(scheduleId) {
@@ -331,7 +331,7 @@ const Schedule = (() => {
     const nextRunDate = document.getElementById('editSchedNextRun').value;
 
     if (remindDays >= deadlineDays) {
-      alert('Số ngày nhắc nhở phải nhỏ hơn deadline!');
+      alert('Reminder days must be less than deadline days!');
       return;
     }
 
@@ -354,7 +354,7 @@ const Schedule = (() => {
       .eq('id', scheduleId);
 
     if (error) {
-      alert('Lỗi: ' + error.message);
+      alert('Error: ' + error.message);
       return;
     }
 
@@ -370,7 +370,7 @@ const Schedule = (() => {
       .eq('id', scheduleId);
 
     if (error) {
-      alert('Lỗi: ' + error.message);
+      alert('Error: ' + error.message);
       return;
     }
     await render();
@@ -380,19 +380,19 @@ const Schedule = (() => {
   async function deleteSchedule(scheduleId) {
     const bodyHtml = `
       <p style="color: var(--text-secondary); margin-bottom: var(--spacing-md);">
-        Bạn có chắc muốn xóa lịch định kỳ này?
+        Are you sure you want to delete this recurring schedule?
       </p>
       <p style="color: var(--accent-red); font-size: var(--font-size-sm);">
-        ⚠️ Hành động này không thể hoàn tác. Các assignments đã giao sẽ không bị ảnh hưởng.
+        ⚠️ This action cannot be undone. Previously dispatched assignments will not be affected.
       </p>
     `;
 
     const footerHtml = `
-      <button class="btn btn-secondary" onclick="App.closeModal()">Hủy</button>
-      <button class="btn btn-danger" onclick="Schedule.confirmDelete('${scheduleId}')">🗑️ Xóa</button>
+      <button class="btn btn-secondary" onclick="App.closeModal()">Cancel</button>
+      <button class="btn btn-danger" onclick="Schedule.confirmDelete('${scheduleId}')">🗑️ Delete</button>
     `;
 
-    App.openModal('Xác Nhận Xóa Lịch', bodyHtml, footerHtml);
+    App.openModal('Confirm Deletion', bodyHtml, footerHtml);
   }
 
   async function confirmDelete(scheduleId) {
@@ -402,7 +402,7 @@ const Schedule = (() => {
       .eq('id', scheduleId);
 
     if (error) {
-      alert('Lỗi: ' + error.message);
+      alert('Error: ' + error.message);
       return;
     }
 

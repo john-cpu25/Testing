@@ -25,33 +25,25 @@ const Quiz = (() => {
 
     if (availableQuizzes.length === 0) {
       container.innerHTML = `
-        <div class="page-header">
-          <h1 class="page-title">Làm Bài Test</h1>
-          <p class="page-subtitle">Chọn bài test để bắt đầu làm</p>
-        </div>
         <div class="empty-state">
           <div class="empty-state-icon">📝</div>
-          <div class="empty-state-title">Chưa có bài test nào</div>
-          <div class="empty-state-text">Admin cần tạo quiz và thêm câu hỏi trước.</div>
-          <button class="btn btn-primary" onclick="App.navigate('admin')">⚙️ Đi đến Quản Lý Quiz</button>
+          <div class="empty-state-title">No quizzes available</div>
+          <div class="empty-state-text">An administrator needs to create a quiz and add questions first.</div>
+          ${App.isAdmin() ? '<button class="btn btn-primary" onclick="App.navigate(\'admin\')">⚙️ Go to Quiz Management</button>' : ''}
         </div>
       `;
       return;
     }
 
     container.innerHTML = `
-      <div class="page-header">
-        <h1 class="page-title">Làm Bài Test</h1>
-        <p class="page-subtitle">Chọn bài test để bắt đầu — câu hỏi sẽ được xáo trộn ngẫu nhiên</p>
-      </div>
       <div class="quiz-grid">
         ${availableQuizzes.map(quiz => `
           <div class="quiz-card" onclick="Quiz.startEntry('${quiz.id}')">
             <h3 class="quiz-card-title">${App.escapeHtml(quiz.title)}</h3>
-            <p class="quiz-card-desc">${App.escapeHtml(quiz.description || 'Không có mô tả')}</p>
+            <p class="quiz-card-desc">${App.escapeHtml(quiz.description || 'No description')}</p>
             <div class="quiz-card-meta">
-              <span>📝 ${quiz.questions.length} câu</span>
-              <span>⏱️ ${quiz.timeLimit} phút</span>
+              <span>📝 ${quiz.questions.length} questions</span>
+              <span>⏱️ ${quiz.timeLimit} mins</span>
               <span>📅 ${App.formatDate(quiz.createdAt)}</span>
             </div>
           </div>
@@ -81,25 +73,25 @@ const Quiz = (() => {
           <div class="result-stats mb-xl">
             <div class="result-stat">
               <div class="result-stat-value">${quiz.questions.length}</div>
-              <div class="result-stat-label">Câu hỏi</div>
+              <div class="result-stat-label">Questions</div>
             </div>
             <div class="result-stat">
               <div class="result-stat-value">${quiz.timeLimit}</div>
-              <div class="result-stat-label">Phút</div>
+              <div class="result-stat-label">Minutes</div>
             </div>
           </div>
 
           <div class="form-group" style="text-align: left;">
-            <label class="form-label">Họ và tên</label>
-            <input type="text" class="form-input" id="playerName" placeholder="Nhập tên của bạn..."
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-input" id="playerName" placeholder="Enter your name..."
                    value="${App.escapeHtml(autoName)}" ${currentUser ? 'readonly style="opacity:0.7; cursor:not-allowed;"' : 'autofocus'}>
-            ${currentUser ? '<p class="form-hint">Tên được lấy từ tài khoản đăng nhập</p>' : ''}
+            ${currentUser ? '<p class="form-hint">Name retrieved from active user account</p>' : ''}
           </div>
 
           <div class="btn-group justify-center mt-lg">
-            <button class="btn btn-secondary" onclick="Quiz.renderSelection()">← Quay Lại</button>
+            <button class="btn btn-secondary" onclick="Quiz.renderSelection()">← Back</button>
             <button class="btn btn-primary btn-lg" onclick="Quiz.beginQuiz()" id="btnStartQuiz">
-              🚀 Bắt Đầu Làm Bài
+              🚀 Start Quiz
             </button>
           </div>
         </div>
@@ -131,7 +123,7 @@ const Quiz = (() => {
       if (currentUser) {
         userName = currentUser.displayName;
       } else {
-        alert('Vui lòng nhập tên của bạn!');
+        alert('Please enter your name!');
         if (nameInput) nameInput.focus();
         return;
       }
@@ -198,7 +190,7 @@ const Quiz = (() => {
 
       <!-- Question Card -->
       <div class="question-card" id="questionCard">
-        <div class="question-number">Câu ${currentQuestionIndex + 1} / ${shuffledQuestions.length}</div>
+        <div class="question-number">Question ${currentQuestionIndex + 1} of ${shuffledQuestions.length}</div>
         <div class="question-text">${App.escapeHtml(q.text)}</div>
         <div class="options-list">
           ${q.options.map((opt, i) => `
@@ -215,16 +207,16 @@ const Quiz = (() => {
       <div class="flex justify-between items-center mt-xl">
         <button class="btn btn-secondary ${currentQuestionIndex === 0 ? 'hidden' : ''}"
                 onclick="Quiz.prevQuestion()">
-          ← Câu Trước
+          ← Previous
         </button>
         <div></div>
         ${currentQuestionIndex < shuffledQuestions.length - 1 ? `
           <button class="btn btn-primary" onclick="Quiz.nextQuestion()">
-            Câu Tiếp →
+            Next →
           </button>
         ` : `
           <button class="btn btn-success btn-lg" onclick="Quiz.confirmSubmit()">
-            ✅ Nộp Bài
+            ✅ Submit Quiz
           </button>
         `}
       </div>
@@ -311,17 +303,17 @@ const Quiz = (() => {
     if (unanswered > 0) {
       const bodyHtml = `
         <p style="color: var(--text-secondary); margin-bottom: var(--spacing-md);">
-          Bạn còn <strong style="color: var(--accent-yellow);">${unanswered} câu chưa trả lời</strong>.
+          You have <strong style="color: var(--accent-yellow);">${unanswered} unanswered question(s)</strong>.
         </p>
         <p style="color: var(--text-secondary);">
-          Bạn có chắc chắn muốn nộp bài?
+          Are you sure you want to submit your quiz now?
         </p>
       `;
       const footerHtml = `
-        <button class="btn btn-secondary" onclick="App.closeModal()">Tiếp Tục Làm Bài</button>
-        <button class="btn btn-success" onclick="App.closeModal(); Quiz.submitQuiz();">✅ Nộp Bài</button>
+        <button class="btn btn-secondary" onclick="App.closeModal()">Continue Quiz</button>
+        <button class="btn btn-success" onclick="App.closeModal(); Quiz.submitQuiz();">✅ Submit Quiz</button>
       `;
-      App.openModal('Xác Nhận Nộp Bài', bodyHtml, footerHtml);
+      App.openModal('Confirm Submission', bodyHtml, footerHtml);
     } else {
       submitQuiz();
     }
@@ -382,24 +374,24 @@ const Quiz = (() => {
     let scoreClass, message;
     if (result.percentage >= 80) {
       scoreClass = 'excellent';
-      message = '🎉 Xuất Sắc!';
+      message = '🎉 Excellent!';
       App.launchConfetti();
     } else if (result.percentage >= 60) {
       scoreClass = 'good';
-      message = '👍 Tốt Lắm!';
+      message = '👍 Great Job!';
     } else if (result.percentage >= 40) {
       scoreClass = 'average';
-      message = '💪 Cố Gắng Thêm!';
+      message = '💪 Keep Practicing!';
     } else {
       scoreClass = 'poor';
-      message = '📚 Cần Học Thêm!';
+      message = '📚 Needs Improvement!';
     }
 
     container.innerHTML = `
       <div class="score-display">
         <div class="score-circle ${scoreClass}">
           <div class="score-value">${result.percentage}%</div>
-          <div class="score-label">Điểm số</div>
+          <div class="score-label">Score</div>
         </div>
         <h2 class="score-message">${message}</h2>
         <p class="score-detail">
@@ -410,26 +402,26 @@ const Quiz = (() => {
       <div class="result-stats">
         <div class="result-stat">
           <div class="result-stat-value text-green">${result.score}</div>
-          <div class="result-stat-label">Câu đúng</div>
+          <div class="result-stat-label">Correct</div>
         </div>
         <div class="result-stat">
           <div class="result-stat-value text-red">${result.totalQuestions - result.score}</div>
-          <div class="result-stat-label">Câu sai</div>
+          <div class="result-stat-label">Incorrect</div>
         </div>
         <div class="result-stat">
           <div class="result-stat-value text-purple">${result.totalQuestions}</div>
-          <div class="result-stat-label">Tổng câu</div>
+          <div class="result-stat-label">Total Questions</div>
         </div>
         <div class="result-stat">
           <div class="result-stat-value text-cyan">${App.formatTime(result.timeTaken)}</div>
-          <div class="result-stat-label">Thời gian</div>
+          <div class="result-stat-label">Time Taken</div>
         </div>
       </div>
 
       <!-- Answer Review -->
       <div class="card mt-2xl">
         <div class="card-header">
-          <h3 class="card-title">📋 Chi Tiết Đáp Án</h3>
+          <h3 class="card-title">📋 Answer Review</h3>
         </div>
         <div class="review-list">
           ${result.answers.map((a, i) => {
@@ -438,7 +430,7 @@ const Quiz = (() => {
               <div class="review-item ${a.isCorrect ? 'correct-answer' : 'wrong-answer'}">
                 <div class="review-question">
                   <span class="review-status">${a.isCorrect ? '✅' : '❌'}</span>
-                  <span><strong>Câu ${i + 1}:</strong> ${App.escapeHtml(a.questionText)}</span>
+                  <span><strong>Question ${i + 1}:</strong> ${App.escapeHtml(a.questionText)}</span>
                 </div>
                 <div class="review-options">
                   ${a.options.map((opt, j) => {
@@ -451,8 +443,8 @@ const Quiz = (() => {
                       <div class="review-option ${cls}">
                         <strong>${letters[j]}.</strong> ${App.escapeHtml(opt)}
                         ${opt === a.correctAnswer ? ' ✅' : ''}
-                        ${opt === a.selectedAnswer && !a.isCorrect ? ' ❌ (Bạn chọn)' : ''}
-                        ${opt === a.selectedAnswer && a.isCorrect ? ' (Bạn chọn)' : ''}
+                        ${opt === a.selectedAnswer && !a.isCorrect ? ' ❌ (Your choice)' : ''}
+                        ${opt === a.selectedAnswer && a.isCorrect ? ' (Your choice)' : ''}
                       </div>
                     `;
                   }).join('')}
@@ -465,13 +457,13 @@ const Quiz = (() => {
 
       <div class="flex justify-center gap-md mt-2xl mb-xl">
         <button class="btn btn-secondary btn-lg" onclick="Quiz.renderSelection()">
-          ← Chọn Bài Test Khác
+          ← Select Another Quiz
         </button>
         <button class="btn btn-primary btn-lg" onclick="Quiz.startEntry('${result.quizId}')">
-          🔄 Làm Lại
+          🔄 Retake Quiz
         </button>
         <button class="btn btn-success btn-lg" onclick="App.navigate('results')">
-          🏆 Xem Bảng Xếp Hạng
+          🏆 View Results Overview
         </button>
       </div>
     `;

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>APEX SCE - Hệ Thống Test Trắc Nghiệm Online</title>
-  <meta name="description" content="Hệ thống test trắc nghiệm online - APEX Southern Cross Engineering">
+  <title>APEX SCE - Online Assessment & Quiz System</title>
+  <meta name="description" content="Online Assessment and Quiz System - APEX Southern Cross Engineering">
   <link rel="icon" href="assets/logo.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,7 +31,7 @@
     <div class="login-toast" id="loginToast">
       <div class="toast-inner">
         <span class="toast-icon">⚠️</span>
-        <span class="toast-message" id="loginToastMsg">Sai tên đăng nhập hoặc mật khẩu!</span>
+        <span class="toast-message" id="loginToastMsg">Invalid email or password!</span>
       </div>
     </div>
 
@@ -70,19 +70,19 @@
             <span class="field-icon-left">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             </span>
-            <input type="password" class="login-input-field login-password-input" id="loginPassword" placeholder="Mật khẩu..." autocomplete="current-password">
-            <button type="button" class="btn-toggle-password" id="btnTogglePassword" aria-label="Hiện/ẩn mật khẩu">
+            <input type="password" class="login-input-field login-password-input" id="loginPassword" placeholder="Password..." autocomplete="current-password">
+            <button type="button" class="btn-toggle-password" id="btnTogglePassword" aria-label="Show/Hide password">
               <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
               <svg id="eyeOffIcon" class="hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
             </button>
           </div>
 
           <div class="login-options-row">
-            <a href="javascript:void(0)" class="login-forgot-link" id="btnForgotPass">Quên mật khẩu?</a>
+            <a href="javascript:void(0)" class="login-forgot-link" id="btnForgotPass">Forgot Password?</a>
           </div>
 
           <button type="submit" class="btn-login-submit" id="btnLogin">
-            <span id="loginBtnText">ĐĂNG NHẬP</span>
+            <span id="loginBtnText">SIGN IN</span>
             <svg id="loginBtnArrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             <span id="loginBtnSpinner" class="login-spinner hidden"></span>
           </button>
@@ -97,8 +97,8 @@
   <!-- ========== PRELOADER SCREEN ========== -->
   <div class="preloader-screen hidden" id="preloaderScreen">
     <!-- Skip button -->
-    <button class="preloader-skip-btn" id="btnPreloaderSkip" title="Nhấn Space hoặc Escape để bỏ qua">
-      <span>Bỏ qua / Skip</span>
+    <button class="preloader-skip-btn" id="btnPreloaderSkip" title="Press Space or Escape to skip">
+      <span>Skip</span>
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
     </button>
 
@@ -160,25 +160,25 @@
           <span class="nav-icon">📊</span>
           <span class="nav-text">Dashboard</span>
         </li>
-        <li class="nav-item admin-only" data-view="admin" id="navAdmin" title="Quản Lý Quiz">
+        <li class="nav-item admin-only" data-view="admin" id="navAdmin" title="Quiz Management">
           <span class="nav-icon">⚙️</span>
-          <span class="nav-text">Quản Lý Quiz</span>
+          <span class="nav-text">Quiz Management</span>
         </li>
-        <li class="nav-item" data-view="quiz" id="navQuiz" title="Làm Bài Test">
+        <li class="nav-item" data-view="quiz" id="navQuiz" title="Take Quiz">
           <span class="nav-icon">📝</span>
-          <span class="nav-text">Làm Bài Test</span>
+          <span class="nav-text">Take Quiz</span>
         </li>
-        <li class="nav-item" data-view="results" id="navResults" title="Kết Quả">
+        <li class="nav-item" data-view="results" id="navResults" title="Results">
           <span class="nav-icon">🏆</span>
-          <span class="nav-text">Kết Quả</span>
+          <span class="nav-text">Results</span>
         </li>
-        <li class="nav-item admin-only" data-view="schedule" id="navSchedule" title="Lịch Định Kỳ">
+        <li class="nav-item admin-only" data-view="schedule" id="navSchedule" title="Schedules">
           <span class="nav-icon">📅</span>
-          <span class="nav-text">Lịch Định Kỳ</span>
+          <span class="nav-text">Schedules</span>
         </li>
-        <li class="nav-item admin-only" data-view="accounts" id="navAccounts" title="Quản Lý Tài Khoản">
+        <li class="nav-item admin-only" data-view="accounts" id="navAccounts" title="Account Management">
           <span class="nav-icon">👥</span>
-          <span class="nav-text">Quản Lý Tài Khoản</span>
+          <span class="nav-text">Account Management</span>
         </li>
       </ul>
 
@@ -190,20 +190,10 @@
 
     <!-- Main Workspace Wrapper -->
     <div class="main-wrapper" id="mainWrapper">
-      <!-- App Topbar (Hamburger toggle + Title + Top-Right User Profile) -->
+      <!-- App Topbar (Title + Top-Right User Profile) -->
       <header class="app-topbar" id="appTopbar">
         <div class="topbar-left">
-          <button class="topbar-toggle-btn" id="btnSidebarToggle" title="Thu gọn / Mở rộng Menu" aria-label="Toggle Sidebar Navigation">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="3" y1="6" x2="21" y2="6"/>
-              <line x1="3" y1="12" x2="21" y2="12"/>
-              <line x1="3" y1="18" x2="21" y2="18"/>
-            </svg>
-          </button>
-          <div class="topbar-title-block">
-            <h1 class="topbar-main-title" id="topbarMainTitle">Dashboard</h1>
-            <p class="topbar-subtitle" id="topbarSubtitle">Tổng quan hệ thống test trắc nghiệm</p>
-          </div>
+          <h1 class="topbar-main-title" id="topbarMainTitle">Dashboard</h1>
         </div>
 
         <div class="topbar-right">
@@ -219,19 +209,14 @@
 
         <!-- ========== DASHBOARD VIEW ========== -->
         <section class="view active" id="dashboardView">
-        <div class="page-header">
-          <h1 class="page-title">Dashboard</h1>
-          <p class="page-subtitle">Tổng quan hệ thống test trắc nghiệm</p>
-        </div>
-
-        <div class="stats-grid" id="dashboardStats">
-          <!-- Rendered by JS -->
-        </div>
+          <div class="stats-grid" id="dashboardStats">
+            <!-- Rendered by JS -->
+          </div>
 
         <div class="card mt-xl" id="recentQuizzesCard">
           <div class="card-header">
-            <h2 class="card-title">📋 Quiz Gần Đây</h2>
-            <button class="btn btn-primary btn-sm admin-only" onclick="App.navigate('admin')">+ Tạo Quiz</button>
+            <h2 class="card-title">📋 Recent Quizzes</h2>
+            <button class="btn btn-primary btn-sm admin-only" onclick="App.navigate('admin')">+ Create Quiz</button>
           </div>
           <div id="recentQuizzes">
             <!-- Rendered by JS -->
@@ -240,8 +225,8 @@
 
         <div class="card mt-xl">
           <div class="card-header">
-            <h2 class="card-title">🏆 Kết Quả Gần Đây</h2>
-            <button class="btn btn-secondary btn-sm" onclick="App.navigate('results')">Xem Tất Cả</button>
+            <h2 class="card-title">🏆 Recent Results</h2>
+            <button class="btn btn-secondary btn-sm" onclick="App.navigate('results')">View All</button>
           </div>
           <div id="recentResults">
             <!-- Rendered by JS -->
@@ -252,14 +237,14 @@
       <!-- ========== ADMIN VIEW (Quiz Management) ========== -->
       <section class="view" id="adminView">
         <div class="page-header">
-          <h1 class="page-title">Quản Lý Quiz</h1>
-          <p class="page-subtitle">Tạo và quản lý bài test trắc nghiệm</p>
+          <h1 class="page-title">Quiz Management</h1>
+          <p class="page-subtitle">Create and manage multiple-choice quiz tests</p>
         </div>
 
         <div class="flex justify-between items-center mb-xl">
           <div></div>
           <button class="btn btn-primary btn-lg" id="btnCreateQuiz">
-            ✨ Tạo Quiz Mới
+            ✨ Create New Quiz
           </button>
         </div>
 
@@ -271,14 +256,14 @@
       <!-- ========== SCHEDULE VIEW ========== -->
       <section class="view admin-only" id="scheduleView">
         <div class="page-header">
-          <h1 class="page-title">📅 Lịch Test Định Kỳ</h1>
-          <p class="page-subtitle">Thiết lập quiz tự động giao theo chu kỳ & nhắc nhở qua email</p>
+          <h1 class="page-title">📅 Recurring Test Schedules</h1>
+          <p class="page-subtitle">Automated quiz delivery and email notifications</p>
         </div>
 
         <div class="flex justify-between items-center mb-xl">
           <div></div>
           <button class="btn btn-primary btn-lg" id="btnCreateSchedule">
-            ➕ Tạo Lịch Mới
+            ➕ Create Schedule
           </button>
         </div>
 
@@ -290,8 +275,8 @@
       <!-- ========== ACCOUNTS VIEW (Admin Only) ========== -->
       <section class="view admin-only" id="accountsView">
         <div class="page-header">
-          <h1 class="page-title">👥 Quản Lý Tài Khoản</h1>
-          <p class="page-subtitle">Quản lý người dùng, phân quyền Admin/User và bảo mật mật khẩu</p>
+          <h1 class="page-title">👥 Account Management</h1>
+          <p class="page-subtitle">User directory, role assignment, and password security</p>
         </div>
 
         <div class="card mb-xl">
@@ -299,16 +284,16 @@
             <div class="flex gap-md items-center flex-wrap" style="flex: 1; min-width: 280px;">
               <div class="search-input-wrap" style="position: relative; flex: 1; max-width: 380px;">
                 <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 14px; opacity: 0.6;">🔍</span>
-                <input type="text" id="accountSearchInput" class="form-input" placeholder="Tìm theo tên hoặc email..." style="padding-left: 38px;">
+                <input type="text" id="accountSearchInput" class="form-input" placeholder="Search by name or email..." style="padding-left: 38px;">
               </div>
               <select id="accountRoleFilter" class="form-select" style="width: auto; min-width: 140px;">
-                <option value="all">Tất cả vai trò</option>
+                <option value="all">All Roles</option>
                 <option value="admin">👑 Admin</option>
-                <option value="user">👤 Nhân viên</option>
+                <option value="user">👤 User</option>
               </select>
             </div>
             <button class="btn btn-primary" id="btnCreateAccount">
-              ➕ Thêm Người Dùng
+              ➕ Add User
             </button>
           </div>
         </div>
@@ -330,8 +315,8 @@
       <!-- ========== RESULTS VIEW ========== -->
       <section class="view" id="resultsView">
         <div class="page-header">
-          <h1 class="page-title" id="resultsPageTitle">Tổng Hợp Kết Quả</h1>
-          <p class="page-subtitle" id="resultsPageSubtitle">Xem và phân tích kết quả tất cả bài test</p>
+          <h1 class="page-title" id="resultsPageTitle">Results Overview</h1>
+          <p class="page-subtitle" id="resultsPageSubtitle">View and analyze all test results</p>
         </div>
 
         <div class="stats-grid" id="resultsStats">

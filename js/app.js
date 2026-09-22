@@ -347,10 +347,10 @@ const App = (() => {
           <div class="user-role-badge ${badgeClass}">${roleName}</div>
         </div>
         <div class="user-actions">
-          <button class="btn-topbar-action" onclick="App.showChangePasswordModal()" title="Đổi mật khẩu" aria-label="Đổi mật khẩu">
+          <button class="btn-topbar-action" onclick="App.showChangePasswordModal()" title="Change Password" aria-label="Change Password">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>
           </button>
-          <button class="btn-topbar-action btn-logout-action" onclick="App.logout()" title="Đăng xuất" aria-label="Đăng xuất">
+          <button class="btn-topbar-action btn-logout-action" onclick="App.logout()" title="Logout" aria-label="Logout">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           </button>
         </div>
@@ -478,13 +478,13 @@ const App = (() => {
     const btnSpinner = document.getElementById('loginBtnSpinner');
 
     if (!username || !password) {
-      showLoginToast('Vui lòng nhập đầy đủ email và mật khẩu!');
+      showLoginToast('Please enter both email and password!');
       return;
     }
 
     // Loading State
     if (btn) btn.disabled = true;
-    if (btnText) btnText.textContent = 'ĐANG ĐĂNG NHẬP...';
+    if (btnText) btnText.textContent = 'SIGNING IN...';
     if (btnArrow) btnArrow.classList.add('hidden');
     if (btnSpinner) btnSpinner.classList.remove('hidden');
 
@@ -492,7 +492,7 @@ const App = (() => {
 
     // Reset button state
     if (btn) btn.disabled = false;
-    if (btnText) btnText.textContent = 'ĐĂNG NHẬP';
+    if (btnText) btnText.textContent = 'SIGN IN';
     if (btnArrow) btnArrow.classList.remove('hidden');
     if (btnSpinner) btnSpinner.classList.add('hidden');
 
@@ -502,7 +502,7 @@ const App = (() => {
         showApp();
       });
     } else {
-      showLoginToast(result.error || 'Sai tên đăng nhập hoặc mật khẩu!');
+      showLoginToast(result.error || 'Invalid email or password!');
       if (pInput) {
         pInput.value = '';
         pInput.focus();
@@ -534,39 +534,19 @@ const App = (() => {
     const viewEl = document.getElementById(view + 'View');
     if (viewEl) viewEl.classList.add('active');
 
-    // Update Topbar page title & subtitle
+    // Update Topbar page title (no subtitle)
     const viewMetadata = {
-      dashboard: {
-        title: 'Dashboard',
-        subtitle: 'Tổng quan hệ thống test trắc nghiệm'
-      },
-      admin: {
-        title: 'Quản Lý Quiz',
-        subtitle: 'Tạo và chỉnh sửa câu hỏi test'
-      },
-      quiz: {
-        title: 'Làm Bài Test',
-        subtitle: 'Chọn bài trắc nghiệm để bắt đầu làm'
-      },
-      results: {
-        title: 'Tổng Hợp Kết Quả',
-        subtitle: 'Xem và phân tích kết quả tất cả bài test'
-      },
-      schedule: {
-        title: 'Lịch Định Kỳ',
-        subtitle: 'Cấu hình bài test và gửi email tự động'
-      },
-      accounts: {
-        title: 'Quản Lý Tài Khoản',
-        subtitle: 'Danh sách nhân sự và phân quyền hệ thống'
-      }
+      dashboard: { title: 'Dashboard' },
+      admin: { title: 'Quiz Management' },
+      quiz: { title: 'Take Quiz' },
+      results: { title: 'Results Overview' },
+      schedule: { title: 'Recurring Schedules' },
+      accounts: { title: 'Account Management' }
     };
 
-    const meta = viewMetadata[view] || { title: 'Dashboard', subtitle: '' };
+    const meta = viewMetadata[view] || { title: 'Dashboard' };
     const titleEl = document.getElementById('topbarMainTitle');
-    const subEl = document.getElementById('topbarSubtitle');
     if (titleEl) titleEl.textContent = meta.title;
-    if (subEl) subEl.textContent = meta.subtitle;
 
     // Close mobile menu
     document.getElementById('sidebar').classList.remove('open');
@@ -621,22 +601,22 @@ const App = (() => {
       <div class="stat-card purple">
         <div class="stat-icon">📋</div>
         <div class="stat-value">${totalQuizzes}</div>
-        <div class="stat-label">Bài Quiz</div>
+        <div class="stat-label">Quizzes</div>
       </div>
       <div class="stat-card pink">
         <div class="stat-icon">📝</div>
         <div class="stat-value">${totalResults}</div>
-        <div class="stat-label">${user && user.role !== 'admin' ? 'Lượt Làm Của Bạn' : 'Tổng Lượt Làm'}</div>
+        <div class="stat-label">${user && user.role !== 'admin' ? 'Your Submissions' : 'Total Submissions'}</div>
       </div>
       <div class="stat-card green">
         <div class="stat-icon">📈</div>
         <div class="stat-value">${avgScore}%</div>
-        <div class="stat-label">${user && user.role !== 'admin' ? 'Điểm TB Của Bạn' : 'Điểm Trung Bình'}</div>
+        <div class="stat-label">${user && user.role !== 'admin' ? 'Your Avg Score' : 'Average Score'}</div>
       </div>
       <div class="stat-card orange">
         <div class="stat-icon">⏱️</div>
         <div class="stat-value">${App.formatTime(avgTime)}</div>
-        <div class="stat-label">${user && user.role !== 'admin' ? 'Thời Gian TB Của Bạn' : 'Thời Gian Trung Bình'}</div>
+        <div class="stat-label">${user && user.role !== 'admin' ? 'Your Avg Time' : 'Average Time'}</div>
       </div>
     `;
 
@@ -649,9 +629,9 @@ const App = (() => {
       document.getElementById('recentQuizzes').innerHTML = `
         <div class="empty-state">
           <div class="empty-state-icon">📋</div>
-          <div class="empty-state-title">Chưa có quiz nào</div>
-          <div class="empty-state-text">${isAdmin() ? 'Hãy tạo quiz đầu tiên để bắt đầu!' : 'Admin chưa tạo quiz nào.'}</div>
-          ${isAdmin() ? '<button class="btn btn-primary" onclick="App.navigate(\'admin\')">✨ Tạo Quiz Mới</button>' : ''}
+          <div class="empty-state-title">No quizzes yet</div>
+          <div class="empty-state-text">${isAdmin() ? 'Create your first quiz to get started!' : 'No quizzes have been created yet.'}</div>
+          ${isAdmin() ? '<button class="btn btn-primary" onclick="App.navigate(\'admin\')">✨ Create New Quiz</button>' : ''}
         </div>
       `;
     } else {
@@ -660,10 +640,10 @@ const App = (() => {
           <table class="table">
             <thead>
               <tr>
-                <th>Tên Quiz</th>
-                <th>Số câu hỏi</th>
-                <th>Thời gian</th>
-                <th>Ngày tạo</th>
+                <th>Quiz Title</th>
+                <th>Questions</th>
+                <th>Time Limit</th>
+                <th>Created Date</th>
                 <th></th>
               </tr>
             </thead>
@@ -671,12 +651,12 @@ const App = (() => {
               ${recentQuizzes.map(q => `
                 <tr>
                   <td style="font-weight:600; color: var(--text-primary);">${escapeHtml(q.title)}</td>
-                  <td><span class="badge badge-purple">${q.questions.length} câu</span></td>
-                  <td><span class="badge badge-cyan">${q.timeLimit} phút</span></td>
+                  <td><span class="badge badge-purple">${q.questions.length} questions</span></td>
+                  <td><span class="badge badge-cyan">${q.timeLimit} mins</span></td>
                   <td>${formatDate(q.createdAt)}</td>
                   <td>
                     <button class="btn btn-ghost btn-sm" onclick="App.navigate('quiz'); setTimeout(() => Quiz.startEntry('${q.id}'), 100);">
-                      Làm bài →
+                      Take Quiz →
                     </button>
                   </td>
                 </tr>
@@ -696,8 +676,8 @@ const App = (() => {
       document.getElementById('recentResults').innerHTML = `
         <div class="empty-state">
           <div class="empty-state-icon">🏆</div>
-          <div class="empty-state-title">Chưa có kết quả nào</div>
-          <div class="empty-state-text">${user && user.role !== 'admin' ? 'Bạn chưa làm bài test nào.' : 'Kết quả sẽ hiển thị sau khi có người hoàn thành bài test.'}</div>
+          <div class="empty-state-title">No results yet</div>
+          <div class="empty-state-text">${user && user.role !== 'admin' ? 'You have not taken any quizzes yet.' : 'Results will appear once users complete a quiz.'}</div>
         </div>
       `;
     } else {
@@ -706,11 +686,11 @@ const App = (() => {
           <table class="table">
             <thead>
               <tr>
-                <th>Người làm</th>
-                <th>Bài test</th>
-                <th>Điểm</th>
-                <th>Thời gian</th>
-                <th>Ngày</th>
+                <th>User</th>
+                <th>Quiz</th>
+                <th>Score</th>
+                <th>Time Taken</th>
+                <th>Date</th>
               </tr>
             </thead>
             <tbody>
@@ -757,25 +737,25 @@ const App = (() => {
   function showChangePasswordModal() {
     const bodyHtml = `
       <div class="form-group">
-        <label class="form-label">Mật khẩu hiện tại</label>
-        <input type="password" class="form-input" id="oldPassword" placeholder="Nhập mật khẩu hiện tại...">
+        <label class="form-label">Current Password</label>
+        <input type="password" class="form-input" id="oldPassword" placeholder="Enter current password...">
       </div>
       <div class="form-group">
-        <label class="form-label">Mật khẩu mới</label>
-        <input type="password" class="form-input" id="newPassword" placeholder="Nhập mật khẩu mới...">
+        <label class="form-label">New Password</label>
+        <input type="password" class="form-input" id="newPassword" placeholder="Enter new password...">
       </div>
       <div class="form-group">
-        <label class="form-label">Xác nhận mật khẩu mới</label>
-        <input type="password" class="form-input" id="confirmPassword" placeholder="Nhập lại mật khẩu mới...">
+        <label class="form-label">Confirm New Password</label>
+        <input type="password" class="form-input" id="confirmPassword" placeholder="Re-enter new password...">
       </div>
     `;
 
     const footerHtml = `
-      <button class="btn btn-secondary" onclick="App.closeModal()">Hủy</button>
-      <button class="btn btn-primary" onclick="App.submitChangePassword()">💾 Cập Nhật</button>
+      <button class="btn btn-secondary" onclick="App.closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="App.submitChangePassword()">💾 Update Password</button>
     `;
 
-    openModal('Đổi Mật Khẩu', bodyHtml, footerHtml);
+    openModal('Change Password', bodyHtml, footerHtml);
   }
 
   async function submitChangePassword() {
@@ -784,12 +764,12 @@ const App = (() => {
     const confirmPassword = document.getElementById('confirmPassword').value;
 
     if (!oldPassword || !newPassword || !confirmPassword) {
-      alert('Vui lòng nhập đầy đủ thông tin!');
+      alert('Please fill in all fields!');
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      alert('Mật khẩu mới và xác nhận không khớp!');
+      alert('New password and confirmation do not match!');
       return;
     }
 
@@ -798,14 +778,14 @@ const App = (() => {
 
     if (!supabase) return;
 
-    // Verify old password (hỗ trợ cả mật khẩu băm SHA-256 lẫn plain-text)
+    // Verify old password (supports SHA-256 hash and plain-text fallback)
     const { data: users, error: selectError } = await supabase
       .from('Testing_users')
       .select('id, password')
       .eq('email', user.username);
 
     if (selectError || !users || users.length === 0) {
-      alert('Không tìm thấy thông tin tài khoản!');
+      alert('Account not found!');
       return;
     }
 
@@ -813,7 +793,7 @@ const App = (() => {
     const currentDbPassword = users[0].password;
 
     if (currentDbPassword !== hashedOld && currentDbPassword !== oldPassword) {
-      alert('Mật khẩu hiện tại không đúng!');
+      alert('Current password is incorrect!');
       return;
     }
 
@@ -826,12 +806,12 @@ const App = (() => {
       .eq('email', user.username);
 
     if (updateError) {
-      alert('Có lỗi xảy ra khi cập nhật mật khẩu!');
+      alert('Failed to update password!');
       console.error(updateError);
       return;
     }
 
-    alert('Đổi mật khẩu thành công! Mật khẩu mới đã được bảo mật an toàn.');
+    alert('Password updated successfully! Your account is now secured.');
     closeModal();
   }
 
@@ -1272,7 +1252,7 @@ const App = (() => {
         }
       });
       sidebarHeader.style.cursor = 'pointer';
-      sidebarHeader.title = 'Thu gọn / Mở rộng Sidebar';
+      sidebarHeader.title = 'Collapse / Expand Sidebar';
     }
 
     // Restore saved sidebar collapsed state
@@ -1304,7 +1284,7 @@ const App = (() => {
     const forgotPassBtn = document.getElementById('btnForgotPass');
     if (forgotPassBtn) {
       forgotPassBtn.addEventListener('click', () => {
-        alert('Vui lòng liên hệ Admin hệ thống ApexTesting (johnny.nguyen@apexscengineering.com hoặc staff@apexscengineering.com) để được cấp lại mật khẩu.');
+        alert('Please contact the ApexTesting System Administrator (johnny.nguyen@apexscengineering.com) to reset your password.');
       });
     }
 
