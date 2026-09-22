@@ -60,7 +60,11 @@ Nếu quyết định sử dụng Microsoft 365 SMTP qua GitHub Actions làm lu�
 ---
 
 ### 🟢 4. Các hạng mục nâng cấp hệ thống tiếp theo (Backlog)
-- [ ] **Bảo mật mật khẩu:** Hash password bằng bcrypt/argon2 thay vì plaintext trong bảng `Testing_users`.
-- [ ] **Bảo mật RLS:** Thiết lập Row Level Security chặt chẽ hơn dựa trên quyền role (admin / user).
-- [ ] **UX Đổi mật khẩu:** Cung cấp tính năng tự đổi mật khẩu cho user trong giao diện web.
+- [x] **Giao diện Đăng nhập APEX chuẩn (v3):** Video nền (`intro_login.mp4`), glassmorphic card, pulse glow, vi mạch SVG, typography Rajdhani/Inter, ẩn/hiện mật khẩu.
+- [x] **Màn hình Preloader:** Video intro đồng bộ loading %, logo99 pulse nhịp thở, nút Skip, phím tắt Space/Esc.
+- [x] **Bảo mật mật khẩu:** Mã hóa SHA-256 client-side, tự động băm (auto-upgrade) khi đăng nhập lần đầu từ mật khẩu cũ.
+- [x] **Hệ thống Quản lý Tài khoản (Admin):** Tab "👥 Quản Lý Tài Khoản" cho phép xem danh sách, đổi vai trò (Admin/User), cấp lại mật khẩu mới, tạo người dùng mới.
+- [x] **Tính năng Đổi mật khẩu:** Modal đổi mật khẩu bảo mật cho nhân viên.
+- [ ] **Bảo mật RLS:** Thiết lập Row Level Security chặt chẽ hơn dựa trên quyền role (admin / user) trong Supabase.
 - [ ] **Tên miền riêng:** Cấu hình custom domain (tham khảo [domain_setup.md](file:///c:/Users/Johnny%20Nguyen/OneDrive%20-%20APEX%20SOUTHERN%20CROSS%20ENGINEERING/CSharp/TESTING/Testing/domain_setup.md)).
+
