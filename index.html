@@ -145,7 +145,7 @@
   <div class="app-layout hidden" id="appLayout">
     <!-- Sidebar -->
     <nav class="sidebar" id="sidebar">
-      <div class="sidebar-header">
+      <div class="sidebar-header" id="sidebarHeader">
         <div class="logo">
           <img src="assets/logo.png" alt="APEX" class="sidebar-logo-img">
           <div class="sidebar-brand-text">
@@ -155,33 +155,28 @@
         </div>
       </div>
 
-      <!-- User Profile -->
-      <div class="user-profile" id="userProfile">
-        <!-- Rendered by JS -->
-      </div>
-
       <ul class="nav-menu">
-        <li class="nav-item active" data-view="dashboard" id="navDashboard">
+        <li class="nav-item active" data-view="dashboard" id="navDashboard" title="Dashboard">
           <span class="nav-icon">📊</span>
           <span class="nav-text">Dashboard</span>
         </li>
-        <li class="nav-item admin-only" data-view="admin" id="navAdmin">
+        <li class="nav-item admin-only" data-view="admin" id="navAdmin" title="Quản Lý Quiz">
           <span class="nav-icon">⚙️</span>
           <span class="nav-text">Quản Lý Quiz</span>
         </li>
-        <li class="nav-item" data-view="quiz" id="navQuiz">
+        <li class="nav-item" data-view="quiz" id="navQuiz" title="Làm Bài Test">
           <span class="nav-icon">📝</span>
           <span class="nav-text">Làm Bài Test</span>
         </li>
-        <li class="nav-item" data-view="results" id="navResults">
+        <li class="nav-item" data-view="results" id="navResults" title="Kết Quả">
           <span class="nav-icon">🏆</span>
           <span class="nav-text">Kết Quả</span>
         </li>
-        <li class="nav-item admin-only" data-view="schedule" id="navSchedule">
+        <li class="nav-item admin-only" data-view="schedule" id="navSchedule" title="Lịch Định Kỳ">
           <span class="nav-icon">📅</span>
           <span class="nav-text">Lịch Định Kỳ</span>
         </li>
-        <li class="nav-item admin-only" data-view="accounts" id="navAccounts">
+        <li class="nav-item admin-only" data-view="accounts" id="navAccounts" title="Quản Lý Tài Khoản">
           <span class="nav-icon">👥</span>
           <span class="nav-text">Quản Lý Tài Khoản</span>
         </li>
@@ -189,14 +184,42 @@
 
       <div class="sidebar-footer">
         <p class="sidebar-footer-text">ApexTesting v2.5 © 2026</p>
+        <p class="sidebar-footer-mini">v2.5</p>
       </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="main-content" id="mainContent">
+    <!-- Main Workspace Wrapper -->
+    <div class="main-wrapper" id="mainWrapper">
+      <!-- App Topbar (Hamburger toggle + Title + Top-Right User Profile) -->
+      <header class="app-topbar" id="appTopbar">
+        <div class="topbar-left">
+          <button class="topbar-toggle-btn" id="btnSidebarToggle" title="Thu gọn / Mở rộng Menu" aria-label="Toggle Sidebar Navigation">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </button>
+          <div class="topbar-heading">
+            <span class="topbar-app-name">APEX SCE</span>
+            <span class="topbar-separator">/</span>
+            <span class="topbar-page-name" id="topbarPageName">Dashboard</span>
+          </div>
+        </div>
 
-      <!-- ========== DASHBOARD VIEW ========== -->
-      <section class="view active" id="dashboardView">
+        <div class="topbar-right">
+          <!-- Logged-in User Profile Container (Top Right Corner) -->
+          <div class="user-profile-top" id="userProfile">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content" id="mainContent">
+
+        <!-- ========== DASHBOARD VIEW ========== -->
+        <section class="view active" id="dashboardView">
         <div class="page-header">
           <h1 class="page-title">Dashboard</h1>
           <p class="page-subtitle">Tổng quan hệ thống test trắc nghiệm</p>
@@ -328,6 +351,7 @@
       </section>
 
     </main>
+    </div>
   </div>
 
   <!-- Modal -->

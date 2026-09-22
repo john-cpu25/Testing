@@ -347,26 +347,277 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .sidebar-footer {
-  padding: var(--spacing-lg);
+  padding: 14px 18px;
   border-top: 1px solid var(--border-color);
+  margin-top: auto;
 }
 
 .sidebar-footer-text {
   font-size: var(--font-size-xs);
   color: var(--text-muted);
   text-align: center;
+  white-space: nowrap;
+}
+
+.sidebar-footer-mini {
+  display: none;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* ============================================
+   Sidebar Collapsed State (YouTube Style)
+   ============================================ */
+.app-layout.sidebar-collapsed .sidebar {
+  width: var(--sidebar-collapsed);
+}
+
+.app-layout.sidebar-collapsed .sidebar-header {
+  padding: 14px 12px;
+  justify-content: center;
+}
+
+.app-layout.sidebar-collapsed .sidebar-brand-text {
+  display: none !important;
+}
+
+.app-layout.sidebar-collapsed .nav-menu {
+  padding: 12px 6px;
+}
+
+.app-layout.sidebar-collapsed .nav-item {
+  padding: 12px 0;
+  justify-content: center;
+  gap: 0;
+  border-radius: 10px;
+}
+
+.app-layout.sidebar-collapsed .nav-item .nav-icon {
+  margin: 0;
+  font-size: 1.35rem;
+  width: auto;
+}
+
+.app-layout.sidebar-collapsed .nav-item .nav-text {
+  display: none !important;
+}
+
+.app-layout.sidebar-collapsed .sidebar-footer-text {
+  display: none !important;
+}
+
+.app-layout.sidebar-collapsed .sidebar-footer-mini {
+  display: block !important;
+}
+
+/* ============================================
+   Main Workspace Wrapper
+   ============================================ */
+.main-wrapper {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.app-layout.sidebar-collapsed .main-wrapper {
+  margin-left: var(--sidebar-collapsed);
+}
+
+/* ============================================
+   App Topbar (Sticky Header)
+   ============================================ */
+.app-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.topbar-toggle-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: #ffffff;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+
+.topbar-toggle-btn:hover {
+  color: var(--accent-purple);
+  border-color: var(--border-accent);
+  background: rgba(139, 92, 246, 0.06);
+  transform: scale(1.05);
+}
+
+.topbar-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.topbar-app-name {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 17px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.topbar-separator {
+  color: var(--text-muted);
+}
+
+.topbar-page-name {
+  font-weight: 600;
+  color: var(--accent-purple);
+}
+
+/* Topbar Right - User Profile */
+.topbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.user-profile-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 5px 12px 5px 6px;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.user-profile-top:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: var(--border-hover);
+}
+
+.user-profile-top .user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.user-profile-top .user-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.user-profile-top .user-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.user-profile-top .user-role-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  display: inline-block;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+  width: fit-content;
+}
+
+.user-profile-top .role-admin {
+  background: rgba(236, 72, 153, 0.12);
+  color: #db2777;
+}
+
+.user-profile-top .role-user {
+  background: rgba(6, 182, 212, 0.12);
+  color: #0891b2;
+}
+
+.user-profile-top .user-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 6px;
+}
+
+.btn-topbar-action {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: #ffffff;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.btn-topbar-action:hover {
+  color: var(--accent-purple);
+  border-color: var(--accent-purple);
+  background: rgba(139, 92, 246, 0.08);
+  transform: translateY(-1px);
+}
+
+.btn-topbar-action.btn-logout-action:hover {
+  color: var(--accent-red);
+  border-color: var(--accent-red);
+  background: rgba(239, 68, 68, 0.08);
 }
 
 /* ============================================
    Main Content
    ============================================ */
 .main-content {
-  margin-left: var(--sidebar-width);
+  margin-left: 0;
   flex: 1;
-  padding: var(--spacing-2xl);
-  min-height: 100vh;
-  transition: margin-left var(--transition-slow);
-  max-width: 1200px;
+  padding: var(--spacing-xl) var(--spacing-2xl);
+  min-height: calc(100vh - 64px);
+  max-width: 1300px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all var(--transition-slow);
 }
 
 .view {
@@ -1670,10 +1921,22 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0 var(--spacing-lg);
   }
 
+  .main-wrapper {
+    margin-left: 0 !important;
+  }
+
+  .app-topbar {
+    padding: 0 16px;
+  }
+
+  .topbar-heading {
+    display: none;
+  }
+
   .main-content {
     margin-left: 0;
     padding: var(--spacing-lg);
-    padding-top: calc(var(--header-height) + var(--spacing-lg));
+    padding-top: var(--spacing-lg);
   }
 
   .stats-grid {

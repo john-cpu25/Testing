@@ -332,24 +332,30 @@ const App = (() => {
     const user = getCurrentUser();
     if (!user) return;
 
-    // Render user profile in sidebar
+    // Render user profile in topbar (top-right corner)
     const profileEl = document.getElementById('userProfile');
-    const avatarClass = user.role === 'admin' ? 'admin-avatar' : 'user-avatar-style';
-    const badgeClass = user.role === 'admin' ? 'role-admin' : 'role-user';
-    const roleName = user.role === 'admin' ? '👑 Admin' : '👤 User';
-    const initial = (user.displayName || 'U').charAt(0).toUpperCase();
+    if (profileEl) {
+      const avatarClass = user.role === 'admin' ? 'admin-avatar' : 'user-avatar-style';
+      const badgeClass = user.role === 'admin' ? 'role-admin' : 'role-user';
+      const roleName = user.role === 'admin' ? '👑 Admin' : '👤 User';
+      const initial = (user.displayName || 'U').charAt(0).toUpperCase();
 
-    profileEl.innerHTML = `
-      <div class="user-avatar ${avatarClass}">${initial}</div>
-      <div class="user-info">
-        <div class="user-name">${escapeHtml(user.displayName)}</div>
-        <div class="user-role-badge ${badgeClass}">${roleName}</div>
-      </div>
-      <div style="display: flex; flex-direction: column; gap: 5px; justify-content: center;">
-        <button class="btn-logout" style="background-color: var(--bg-card); color: var(--text-secondary);" onclick="App.showChangePasswordModal()" title="Đổi mật khẩu">🔑</button>
-        <button class="btn-logout" onclick="App.logout()" title="Đăng xuất">🚪</button>
-      </div>
-    `;
+      profileEl.innerHTML = `
+        <div class="user-avatar ${avatarClass}" title="${escapeHtml(user.displayName)}">${initial}</div>
+        <div class="user-info">
+          <div class="user-name">${escapeHtml(user.displayName)}</div>
+          <div class="user-role-badge ${badgeClass}">${roleName}</div>
+        </div>
+        <div class="user-actions">
+          <button class="btn-topbar-action" onclick="App.showChangePasswordModal()" title="Đổi mật khẩu" aria-label="Đổi mật khẩu">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>
+          </button>
+          <button class="btn-topbar-action btn-logout-action" onclick="App.logout()" title="Đăng xuất" aria-label="Đăng xuất">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </button>
+        </div>
+      `;
+    }
 
     // Show/hide admin-only elements
     document.querySelectorAll('.admin-only').forEach(el => {
@@ -527,6 +533,20 @@ const App = (() => {
     });
     const viewEl = document.getElementById(view + 'View');
     if (viewEl) viewEl.classList.add('active');
+
+    // Update Topbar page title
+    const viewTitles = {
+      dashboard: 'Dashboard',
+      admin: 'Quản Lý Quiz',
+      quiz: 'Làm Bài Test',
+      results: 'Tổng Hợp Kết Quả',
+      schedule: 'Lịch Định Kỳ',
+      accounts: 'Quản Lý Tài Khoản'
+    };
+    const pageTitleEl = document.getElementById('topbarPageName');
+    if (pageTitleEl) {
+      pageTitleEl.textContent = viewTitles[view] || 'Dashboard';
+    }
 
     // Close mobile menu
     document.getElementById('sidebar').classList.remove('open');
@@ -1201,6 +1221,43 @@ const App = (() => {
         document.getElementById('sidebar').classList.remove('open');
         mobileOverlay.classList.remove('active');
       });
+    }
+
+    // Sidebar Collapse / Expand (YouTube style)
+    const btnSidebarToggle = document.getElementById('btnSidebarToggle');
+    const sidebarHeader = document.getElementById('sidebarHeader');
+    const appLayout = document.getElementById('appLayout');
+
+    const toggleSidebarCollapse = () => {
+      if (window.innerWidth <= 768) {
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar) sidebar.classList.toggle('open');
+        if (mobileOverlay) mobileOverlay.classList.toggle('active');
+      } else {
+        if (appLayout) {
+          appLayout.classList.toggle('sidebar-collapsed');
+          const isCollapsed = appLayout.classList.contains('sidebar-collapsed');
+          localStorage.setItem('apex_sidebar_collapsed', isCollapsed ? '1' : '0');
+        }
+      }
+    };
+
+    if (btnSidebarToggle) {
+      btnSidebarToggle.addEventListener('click', toggleSidebarCollapse);
+    }
+    if (sidebarHeader) {
+      sidebarHeader.addEventListener('click', () => {
+        if (window.innerWidth > 768) {
+          toggleSidebarCollapse();
+        }
+      });
+      sidebarHeader.style.cursor = 'pointer';
+      sidebarHeader.title = 'Thu gọn / Mở rộng Sidebar';
+    }
+
+    // Restore saved sidebar collapsed state
+    if (localStorage.getItem('apex_sidebar_collapsed') === '1' && window.innerWidth > 768) {
+      if (appLayout) appLayout.classList.add('sidebar-collapsed');
     }
 
     // Toggle password visibility
