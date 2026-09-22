@@ -201,15 +201,24 @@ const App = (() => {
     return user && user.role === 'admin';
   }
 
+  // ---- Password Hashing (SHA-256) ----
+  async function hashPassword(password) {
+    if (!password) return '';
+    const msgBuffer = new TextEncoder().encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
   async function login(username, password) {
-    if (!supabase) return false;
-    const u = (username || '').trim();
-    if (!u) return false;
+    if (!supabase) return { success: false, error: 'Chưa kết nối cơ sở dữ liệu' };
+    const u = (username || '').trim().toLowerCase();
+    const pwd = (password || '').trim();
+    if (!u || !pwd) return { success: false, error: 'Vui lòng nhập đầy đủ thông tin' };
 
     let query = supabase
       .from('Testing_users')
-      .select('*')
-      .eq('password', password);
+      .select('*');
 
     if (u.includes('@')) {
       query = query.ilike('email', u);
@@ -219,18 +228,51 @@ const App = (() => {
 
     const { data: users, error } = await query;
 
-    if (error || !users || users.length === 0) return false;
+    if (error || !users || users.length === 0) {
+      return { success: false, error: 'Tài khoản không tồn tại trong hệ thống' };
+    }
 
     const account = users[0];
+    const hashedInput = await hashPassword(pwd);
+
+    // Kiểm tra mật khẩu: Hỗ trợ cả mật khẩu đã băm SHA-256 và mật khẩu plain-text cũ
+    let isValid = false;
+    let needsUpgrade = false;
+
+    if (account.password === hashedInput) {
+      isValid = true;
+    } else if (account.password === pwd) {
+      isValid = true;
+      needsUpgrade = true; // Mật khẩu khớp dạng plain-text -> Cần tự động nâng cấp sang SHA-256
+    }
+
+    if (!isValid) {
+      return { success: false, error: 'Sai mật khẩu. Vui lòng thử lại!' };
+    }
+
+    // Tự động nâng cấp mật khẩu sang SHA-256 trên Supabase nếu vẫn là plain-text
+    if (needsUpgrade) {
+      try {
+        await supabase
+          .from('Testing_users')
+          .update({ password: hashedInput })
+          .eq('id', account.id);
+        console.log('[ApexTesting] Đã nâng cấp mật khẩu sang SHA-256 thành công cho:', account.email);
+      } catch (e) {
+        console.error('[ApexTesting] Lỗi nâng cấp mật khẩu:', e);
+      }
+    }
+
     const session = {
       id: account.id,
       username: account.email,
       displayName: account.display_name,
-      role: account.role
+      role: (account.role || 'user').toLowerCase()
     };
 
     sessionStorage.setItem('ApexTesting_session', JSON.stringify(session));
-    return true;
+    localStorage.setItem('ApexTesting_last_email', account.email);
+    return { success: true };
   }
 
   function logout() {
@@ -239,26 +281,49 @@ const App = (() => {
   }
 
   function fillLogin(username, password) {
-    document.getElementById('loginUsername').value = username;
-    document.getElementById('loginPassword').value = password;
-    document.getElementById('loginUsername').focus();
+    const uInput = document.getElementById('loginUsername');
+    const pInput = document.getElementById('loginPassword');
+    if (uInput) uInput.value = username;
+    if (pInput) pInput.value = password;
+    if (uInput) uInput.focus();
+  }
+
+  let toastTimer = null;
+  function showLoginToast(msg) {
+    const toast = document.getElementById('loginToast');
+    const toastMsg = document.getElementById('loginToastMsg');
+    if (!toast || !toastMsg) return;
+    toastMsg.textContent = msg;
+    toast.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toast.classList.remove('show');
+    }, 4500);
   }
 
   function showLoginPage() {
-    document.getElementById('loginPage').classList.remove('hidden');
-    document.getElementById('appLayout').classList.add('hidden');
-    document.getElementById('loginError').classList.remove('show');
-    document.getElementById('loginUsername').value = '';
-    document.getElementById('loginPassword').value = '';
+    const loginPage = document.getElementById('loginPage');
+    const appLayout = document.getElementById('appLayout');
+    const toast = document.getElementById('loginToast');
+    const uInput = document.getElementById('loginUsername');
+    const pInput = document.getElementById('loginPassword');
+
+    if (loginPage) loginPage.classList.remove('hidden');
+    if (appLayout) appLayout.classList.add('hidden');
+    if (toast) toast.classList.remove('show');
+    if (uInput) uInput.value = '';
+    if (pInput) pInput.value = '';
 
     setTimeout(() => {
-      document.getElementById('loginUsername').focus();
-    }, 100);
+      if (uInput) uInput.focus();
+    }, 150);
   }
 
   function showApp() {
-    document.getElementById('loginPage').classList.add('hidden');
-    document.getElementById('appLayout').classList.remove('hidden');
+    const loginPage = document.getElementById('loginPage');
+    const appLayout = document.getElementById('appLayout');
+    if (loginPage) loginPage.classList.add('hidden');
+    if (appLayout) appLayout.classList.remove('hidden');
     updateUIForRole();
     renderDashboard();
   }
@@ -272,7 +337,7 @@ const App = (() => {
     const avatarClass = user.role === 'admin' ? 'admin-avatar' : 'user-avatar-style';
     const badgeClass = user.role === 'admin' ? 'role-admin' : 'role-user';
     const roleName = user.role === 'admin' ? '👑 Admin' : '👤 User';
-    const initial = user.displayName.charAt(0).toUpperCase();
+    const initial = (user.displayName || 'U').charAt(0).toUpperCase();
 
     profileEl.innerHTML = `
       <div class="user-avatar ${avatarClass}">${initial}</div>
@@ -292,25 +357,150 @@ const App = (() => {
     });
   }
 
-  async function handleLogin() {
-    const username = document.getElementById('loginUsername').value.trim();
-    const password = document.getElementById('loginPassword').value.trim();
+  // Preloader runner (Intro Video & Progress Sync)
+  function runPreloader(callback) {
+    const preloader = document.getElementById('preloaderScreen');
+    const video = document.getElementById('preloaderVideo');
+    const text = document.getElementById('preloaderLoadingText');
+    const bar = document.getElementById('preloaderProgressBar');
+    const skipBtn = document.getElementById('btnPreloaderSkip');
 
-    if (!username || !password) {
-      document.getElementById('loginError').textContent = '❌ Vui lòng nhập đầy đủ thông tin!';
-      document.getElementById('loginError').classList.add('show');
+    if (!preloader) {
+      if (callback) callback();
       return;
     }
 
-    const success = await login(username, password);
+    preloader.classList.remove('hidden');
+    preloader.classList.remove('fade-out');
 
-    if (success) {
-      showApp();
+    let isCompleted = false;
+    let currentProgress = 0;
+
+    const setProgress = (p) => {
+      currentProgress = Math.min(Math.max(p, 0), 100);
+      if (text) text.textContent = `LOADING : ${Math.round(currentProgress)}%`;
+      if (bar) bar.style.width = `${currentProgress}%`;
+    };
+
+    const finish = () => {
+      if (isCompleted) return;
+      isCompleted = true;
+      setProgress(100);
+      if (video) {
+        try { video.pause(); } catch (e) {}
+      }
+      setTimeout(() => {
+        preloader.classList.add('fade-out');
+        setTimeout(() => {
+          preloader.classList.add('hidden');
+          preloader.classList.remove('fade-out');
+          if (callback) callback();
+        }, 450);
+      }, 300);
+    };
+
+    // Skip Button Click
+    if (skipBtn) {
+      skipBtn.onclick = finish;
+    }
+
+    // Keyboard shortcut (Space / Esc)
+    const handleKey = (e) => {
+      if (e.key === 'Escape' || e.code === 'Space') {
+        e.preventDefault();
+        window.removeEventListener('keydown', handleKey);
+        finish();
+      }
+    };
+    window.addEventListener('keydown', handleKey);
+
+    // Video Event Listeners
+    if (video) {
+      try {
+        video.currentTime = 0;
+        video.ontimeupdate = () => {
+          if (video.duration && video.duration > 0) {
+            const pct = (video.currentTime / video.duration) * 100;
+            setProgress(pct);
+          }
+        };
+        video.onended = () => {
+          window.removeEventListener('keydown', handleKey);
+          finish();
+        };
+
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(err => {
+            console.warn('[Preloader] Video play error or blocked, activating fallback timer.', err);
+          });
+        }
+      } catch (err) {
+        console.warn('[Preloader] Error setting up video:', err);
+      }
+    }
+
+    // Fallback simulation in case video doesn't run
+    let simProgress = 0;
+    const simInterval = setInterval(() => {
+      if (isCompleted) {
+        clearInterval(simInterval);
+        return;
+      }
+      simProgress += Math.random() * 8 + 3;
+      if (simProgress >= 100) {
+        clearInterval(simInterval);
+        window.removeEventListener('keydown', handleKey);
+        finish();
+      } else {
+        if (currentProgress < simProgress) {
+          setProgress(simProgress);
+        }
+      }
+    }, 120);
+  }
+
+  async function handleLogin() {
+    const uInput = document.getElementById('loginUsername');
+    const pInput = document.getElementById('loginPassword');
+    const username = uInput ? uInput.value.trim() : '';
+    const password = pInput ? pInput.value.trim() : '';
+
+    const btn = document.getElementById('btnLogin');
+    const btnText = document.getElementById('loginBtnText');
+    const btnArrow = document.getElementById('loginBtnArrow');
+    const btnSpinner = document.getElementById('loginBtnSpinner');
+
+    if (!username || !password) {
+      showLoginToast('Vui lòng nhập đầy đủ email và mật khẩu!');
+      return;
+    }
+
+    // Loading State
+    if (btn) btn.disabled = true;
+    if (btnText) btnText.textContent = 'ĐANG ĐĂNG NHẬP...';
+    if (btnArrow) btnArrow.classList.add('hidden');
+    if (btnSpinner) btnSpinner.classList.remove('hidden');
+
+    const result = await login(username, password);
+
+    // Reset button state
+    if (btn) btn.disabled = false;
+    if (btnText) btnText.textContent = 'ĐĂNG NHẬP';
+    if (btnArrow) btnArrow.classList.remove('hidden');
+    if (btnSpinner) btnSpinner.classList.add('hidden');
+
+    if (result.success) {
+      document.getElementById('loginPage').classList.add('hidden');
+      runPreloader(() => {
+        showApp();
+      });
     } else {
-      document.getElementById('loginError').textContent = '❌ Sai tên đăng nhập hoặc mật khẩu!';
-      document.getElementById('loginError').classList.add('show');
-      document.getElementById('loginPassword').value = '';
-      document.getElementById('loginPassword').focus();
+      showLoginToast(result.error || 'Sai tên đăng nhập hoặc mật khẩu!');
+      if (pInput) {
+        pInput.value = '';
+        pInput.focus();
+      }
     }
   }
 
@@ -319,7 +509,7 @@ const App = (() => {
 
   async function navigate(view) {
     // Block admin views for regular users
-    if ((view === 'admin' || view === 'schedule') && !isAdmin()) {
+    if ((view === 'admin' || view === 'schedule' || view === 'accounts') && !isAdmin()) {
       await navigate('quiz');
       return;
     }
@@ -358,6 +548,9 @@ const App = (() => {
         break;
       case 'schedule':
         if (typeof Schedule !== 'undefined') await Schedule.render();
+        break;
+      case 'accounts':
+        if (typeof Accounts !== 'undefined') await Accounts.render();
         break;
     }
   }
@@ -565,22 +758,31 @@ const App = (() => {
 
     if (!supabase) return;
 
-    // Verify old password
+    // Verify old password (hỗ trợ cả mật khẩu băm SHA-256 lẫn plain-text)
     const { data: users, error: selectError } = await supabase
       .from('Testing_users')
-      .select('id')
-      .eq('email', user.username)
-      .eq('password', oldPassword);
+      .select('id, password')
+      .eq('email', user.username);
 
     if (selectError || !users || users.length === 0) {
+      alert('Không tìm thấy thông tin tài khoản!');
+      return;
+    }
+
+    const hashedOld = await hashPassword(oldPassword);
+    const currentDbPassword = users[0].password;
+
+    if (currentDbPassword !== hashedOld && currentDbPassword !== oldPassword) {
       alert('Mật khẩu hiện tại không đúng!');
       return;
     }
 
-    // Update new password
+    const hashedNew = await hashPassword(newPassword);
+
+    // Update new password with SHA-256 hash
     const { error: updateError } = await supabase
       .from('Testing_users')
-      .update({ password: newPassword })
+      .update({ password: hashedNew })
       .eq('email', user.username);
 
     if (updateError) {
@@ -589,7 +791,7 @@ const App = (() => {
       return;
     }
 
-    alert('Đổi mật khẩu thành công!');
+    alert('Đổi mật khẩu thành công! Mật khẩu mới đã được bảo mật an toàn.');
     closeModal();
   }
 
@@ -1001,6 +1203,34 @@ const App = (() => {
       });
     }
 
+    // Toggle password visibility
+    const togglePassBtn = document.getElementById('btnTogglePassword');
+    if (togglePassBtn) {
+      togglePassBtn.addEventListener('click', () => {
+        const passInput = document.getElementById('loginPassword');
+        const eyeIcon = document.getElementById('eyeIcon');
+        const eyeOffIcon = document.getElementById('eyeOffIcon');
+        if (!passInput) return;
+        if (passInput.type === 'password') {
+          passInput.type = 'text';
+          if (eyeIcon) eyeIcon.classList.add('hidden');
+          if (eyeOffIcon) eyeOffIcon.classList.remove('hidden');
+        } else {
+          passInput.type = 'password';
+          if (eyeIcon) eyeIcon.classList.remove('hidden');
+          if (eyeOffIcon) eyeOffIcon.classList.add('hidden');
+        }
+      });
+    }
+
+    // Forgot password handler
+    const forgotPassBtn = document.getElementById('btnForgotPass');
+    if (forgotPassBtn) {
+      forgotPassBtn.addEventListener('click', () => {
+        alert('Vui lòng liên hệ Admin hệ thống ApexTesting (johnny.nguyen@apexscengineering.com hoặc staff@apexscengineering.com) để được cấp lại mật khẩu.');
+      });
+    }
+
     // Modal close
     document.getElementById('modalClose').addEventListener('click', closeModal);
     document.getElementById('modalOverlay').addEventListener('click', (e) => {
@@ -1041,7 +1271,9 @@ const App = (() => {
     closeModal,
     launchConfetti,
     renderDashboard,
-    // Auth
+    // Auth & Security
+    hashPassword,
+    supabase,
     getCurrentUser,
     isLoggedIn,
     isAdmin,
