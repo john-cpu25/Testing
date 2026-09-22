@@ -1893,7 +1893,7 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
   padding: 28px 24px 24px 24px;
   box-sizing: border-box;
-  border-radius: 20px;
+  border-radius: 10px;
   background: linear-gradient(
     to bottom,
     rgba(255, 255, 255, 0.95) 0%,
