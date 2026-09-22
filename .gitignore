@@ -1,0 +1,6 @@
+# Supabase local temp
+.temp/
+supabase/.temp/
+node_modules/
+.DS_Store
+Thumbs.db
