@@ -1801,25 +1801,26 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ============================================
-   APEX LOGIN PAGE (Layer 0 to Layer 5)
+   APEX LOGIN PAGE (Clean Video Background)
    ============================================ */
 .login-page {
   position: fixed;
   inset: 0;
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  background:
-    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(10,40,110,0.55), transparent),
-    var(--login-bg);
+  background: #04091a;
   z-index: 1000;
   font-family: 'Inter', sans-serif;
+  padding: 30px 20px;
+  box-sizing: border-box;
 }
 
-/* Layer 0: Background Video */
+/* Background Video (Clean, 100% Opacity, Không Lớp Phủ) */
 .login-bg-video {
   position: absolute;
   inset: 0;
@@ -1828,68 +1829,10 @@ h1, h2, h3, h4, h5, h6 {
   object-fit: cover;
   pointer-events: none;
   z-index: 0;
+  opacity: 1;
 }
 
-/* Layer 1: Pulse Glow Circles */
-.login-pulse-circle {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-  animation: pulseGlow 5s infinite ease-in-out;
-}
-
-.login-pulse-1 {
-  top: -10%;
-  left: -10%;
-  width: 540px;
-  height: 540px;
-  background: radial-gradient(circle, #1a6fff 0%, transparent 70%);
-  opacity: 0.22;
-}
-
-.login-pulse-2 {
-  bottom: -10%;
-  right: -10%;
-  width: 540px;
-  height: 540px;
-  background: radial-gradient(circle, #00c8ff 0%, transparent 70%);
-  opacity: 0.18;
-  animation-delay: 2.5s;
-}
-
-@keyframes pulseGlow {
-  0%, 100% { transform: scale(1); opacity: 0.18; }
-  50% { transform: scale(1.08); opacity: 0.28; }
-}
-
-/* Layer 2: Circuit Board Pattern */
-.login-circuit-overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.07;
-  z-index: 1;
-  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' xmlns='http://www.w3.org/2000/svg'%3E%3Cline x1='0' y1='20' x2='80' y2='20' stroke='%2300c8ff' stroke-width='0.8'/%3E%3Cline x1='0' y1='60' x2='80' y2='60' stroke='%231a6fff' stroke-width='0.8'/%3E%3Cline x1='20' y1='0' x2='20' y2='80' stroke='%231a6fff' stroke-width='0.8'/%3E%3Cline x1='60' y1='0' x2='60' y2='80' stroke='%2300c8ff' stroke-width='0.8'/%3E%3Cline x1='20' y1='20' x2='35' y2='40' stroke='%231a6fff' stroke-width='0.8'/%3E%3Cline x1='60' y1='60' x2='45' y2='40' stroke='%2300c8ff' stroke-width='0.8'/%3E%3Ccircle cx='20' cy='20' r='2.5' fill='%2300c8ff'/%3E%3Ccircle cx='60' cy='20' r='2.5' fill='%231a6fff'/%3E%3Ccircle cx='20' cy='60' r='2.5' fill='%231a6fff'/%3E%3Ccircle cx='60' cy='60' r='2.5' fill='%2300c8ff'/%3E%3Ccircle cx='40' cy='40' r='3' fill='none' stroke='%2300c8ff' stroke-width='0.8'/%3E%3Crect x='28' y='18' width='8' height='4' rx='1.5' fill='none' stroke='%231a6fff' stroke-width='0.8'/%3E%3Crect x='48' y='58' width='8' height='4' rx='1.5' fill='none' stroke='%2300c8ff' stroke-width='0.8'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-}
-
-/* Layer 3: Scanline Overlay */
-.login-scanline-overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.03;
-  z-index: 2;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(255, 255, 255, 0.4) 2px,
-    rgba(255, 255, 255, 0.4) 4px
-  );
-}
-
-/* Layer 4: Error Toast */
+/* Error Toast */
 .login-toast {
   position: absolute;
   top: 24px;
@@ -1923,14 +1866,14 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 500;
 }
 
-/* Layer 5: Glassmorphic Login Card */
+/* Glassmorphic Login Card Container */
 .login-card-container {
   position: relative;
   z-index: 10;
   width: 100%;
-  max-width: 400px;
-  padding: 0 16px;
-  margin: auto;
+  max-width: 420px;
+  margin: 0 auto;
+  box-sizing: border-box;
   animation: cardEntrance 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -1948,8 +1891,9 @@ h1, h2, h3, h4, h5, h6 {
 .login-glass-card {
   position: relative;
   width: 100%;
-  border-radius: 10px;
-  padding: 20px;
+  padding: 28px 24px 24px 24px;
+  box-sizing: border-box;
+  border-radius: 20px;
   background: linear-gradient(
     to bottom,
     rgba(255, 255, 255, 0.95) 0%,
@@ -1959,8 +1903,25 @@ h1, h2, h3, h4, h5, h6 {
   );
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.15), 0 8px 24px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.2), 0 8px 24px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Bottom Glow Bar */
+.login-glow-bar {
+  position: absolute;
+  bottom: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 24px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #0077ff, #00d2ff);
+  filter: blur(24px);
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 /* Logo */
@@ -1968,11 +1929,11 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 10px;
 }
 
 .login-apex-logo {
-  height: 120px;
+  height: 105px;
   width: auto;
   object-fit: contain;
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.12));
@@ -1983,7 +1944,8 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
+  width: 100%;
 }
 
 .login-divider-left {
@@ -2009,7 +1971,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Headings */
 .login-header-text {
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 28px;
 }
 
 .login-brand-title {
@@ -2035,6 +1997,7 @@ h1, h2, h3, h4, h5, h6 {
   font-style: italic;
   color: #94a3b8;
   margin: 4px 0 0 0;
+  line-height: 1.35;
 }
 
 /* Form */
@@ -2042,6 +2005,7 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
 }
 
 .login-field-group {
@@ -2075,11 +2039,12 @@ h1, h2, h3, h4, h5, h6 {
   color: #ffffff;
   border: 1.5px solid rgba(255, 255, 255, 0.15);
   outline: none;
+  box-sizing: border-box;
   transition: border-color 0.25s, box-shadow 0.25s;
 }
 
 .login-password-input {
-  padding-right: 54px;
+  padding-right: 48px;
 }
 
 .login-field-group:focus-within .field-icon-left {
@@ -2098,16 +2063,17 @@ h1, h2, h3, h4, h5, h6 {
 /* Toggle Password Button */
 .btn-toggle-password {
   position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  padding-right: 26px;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
   color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
   transition: color 0.2s;
 }
 
@@ -2119,7 +2085,8 @@ h1, h2, h3, h4, h5, h6 {
 .login-options-row {
   display: flex;
   justify-content: flex-end;
-  margin-top: 2px;
+  margin-top: 0;
+  margin-bottom: 2px;
 }
 
 .login-forgot-link {
@@ -2139,13 +2106,13 @@ h1, h2, h3, h4, h5, h6 {
 /* Submit Button */
 .btn-login-submit {
   width: 100%;
-  height: 44px;
+  height: 46px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #1a6fff 0%, #0ea5ff 100%);
+  background: linear-gradient(135deg, #0077ff 0%, #00aaff 100%);
   border: none;
   font-family: 'Rajdhani', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: #ffffff;
@@ -2154,13 +2121,13 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  box-shadow: 0 4px 20px rgba(26, 111, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+  box-shadow: 0 4px 20px rgba(0, 119, 255, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   margin-top: 4px;
 }
 
 .btn-login-submit:hover:not(:disabled) {
-  box-shadow: 0 6px 24px rgba(26, 111, 255, 0.55);
+  box-shadow: 0 6px 24px rgba(0, 119, 255, 0.6);
   transform: translateY(-1px);
 }
 
@@ -2171,21 +2138,6 @@ h1, h2, h3, h4, h5, h6 {
 .btn-login-submit:disabled {
   opacity: 0.65;
   cursor: not-allowed;
-}
-
-/* Bottom Glow Bar */
-.login-glow-bar {
-  position: absolute;
-  bottom: -24px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 75%;
-  height: 16px;
-  border-radius: 9999px;
-  background: linear-gradient(90deg, #1a6fff, #00c8ff);
-  filter: blur(24px);
-  opacity: 0.3;
-  pointer-events: none;
 }
 
 /* Spinner */
