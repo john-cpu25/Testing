@@ -8,7 +8,7 @@
 
 ---
 
-## 👑 Tài Khoản Admin (4 tài khoản)
+## 👑 Tài Khoản Admin (5 tài khoản)
 
 | # | Họ Tên | Email | Mật Khẩu | Quyền |
 |---|--------|-------|----------|-------|
@@ -16,15 +16,15 @@
 | 2 | Assistant | `assistant@apexscengineering.com` | `Q7$fD1^mB9#gX6!k` | Admin |
 | 3 | Nhan Nguyen | `johnny.nguyen@apexscengineering.com` | `Ham45692` | Admin |
 | 4 | Vu Donguyen | `vu.donguyen@apexscengineering.com` | `A9#bK2!mL7$xP4^q` | Admin |
+| 5 | Bao Pham | `staff@apexscengineering.com` | `vC6&mZ1*gK4@` | Admin |
 
 ---
 
-## 👤 Tài Khoản Nhân Viên (23 tài khoản)
+## 👤 Tài Khoản Nhân Viên (22 tài khoản)
 
 | # | Họ Tên | Email | Mật Khẩu |
 |---|--------|-------|----------|
 | 1 | Anh Nguyen | `anh.nguyen@apexscengineering.com` | `jB5#dC2%qT7^` |
-| 2 | Bao Pham | `staff@apexscengineering.com` | `vC6&mZ1*gK4@` |
 | 3 | Cuong Pham | `cuong.pham@apexscengineering.com` | `pX4@nT7!fD2#` |
 | 4 | Duc Pham | `duc.pham@apexscengineering.com` | `fQ4$rP9&sW3*` |
 | 5 | Dung Do | `dung.do@apexscengineering.com` | `yK1@tM6!xH8#` |
