@@ -476,29 +476,35 @@ h1, h2, h3, h4, h5, h6 {
   transform: scale(1.05);
 }
 
-.topbar-heading {
+.topbar-title-block {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.25;
 }
 
-.topbar-app-name {
-  font-weight: 700;
+.topbar-main-title {
+  font-size: 22px;
+  font-weight: 800;
   color: var(--text-primary);
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 17px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  margin: 0;
+  font-family: var(--font-family);
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.01em;
 }
 
-.topbar-separator {
-  color: var(--text-muted);
+.topbar-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 1px 0 0 0;
+  font-weight: 500;
 }
 
-.topbar-page-name {
-  font-weight: 600;
-  color: var(--accent-purple);
+.page-header {
+  display: none;
 }
 
 /* Topbar Right - User Profile */
@@ -1929,8 +1935,12 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0 16px;
   }
 
-  .topbar-heading {
+  .topbar-subtitle {
     display: none;
+  }
+
+  .topbar-main-title {
+    font-size: 18px;
   }
 
   .main-content {

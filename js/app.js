@@ -534,19 +534,39 @@ const App = (() => {
     const viewEl = document.getElementById(view + 'View');
     if (viewEl) viewEl.classList.add('active');
 
-    // Update Topbar page title
-    const viewTitles = {
-      dashboard: 'Dashboard',
-      admin: 'Quản Lý Quiz',
-      quiz: 'Làm Bài Test',
-      results: 'Tổng Hợp Kết Quả',
-      schedule: 'Lịch Định Kỳ',
-      accounts: 'Quản Lý Tài Khoản'
+    // Update Topbar page title & subtitle
+    const viewMetadata = {
+      dashboard: {
+        title: 'Dashboard',
+        subtitle: 'Tổng quan hệ thống test trắc nghiệm'
+      },
+      admin: {
+        title: 'Quản Lý Quiz',
+        subtitle: 'Tạo và chỉnh sửa câu hỏi test'
+      },
+      quiz: {
+        title: 'Làm Bài Test',
+        subtitle: 'Chọn bài trắc nghiệm để bắt đầu làm'
+      },
+      results: {
+        title: 'Tổng Hợp Kết Quả',
+        subtitle: 'Xem và phân tích kết quả tất cả bài test'
+      },
+      schedule: {
+        title: 'Lịch Định Kỳ',
+        subtitle: 'Cấu hình bài test và gửi email tự động'
+      },
+      accounts: {
+        title: 'Quản Lý Tài Khoản',
+        subtitle: 'Danh sách nhân sự và phân quyền hệ thống'
+      }
     };
-    const pageTitleEl = document.getElementById('topbarPageName');
-    if (pageTitleEl) {
-      pageTitleEl.textContent = viewTitles[view] || 'Dashboard';
-    }
+
+    const meta = viewMetadata[view] || { title: 'Dashboard', subtitle: '' };
+    const titleEl = document.getElementById('topbarMainTitle');
+    const subEl = document.getElementById('topbarSubtitle');
+    if (titleEl) titleEl.textContent = meta.title;
+    if (subEl) subEl.textContent = meta.subtitle;
 
     // Close mobile menu
     document.getElementById('sidebar').classList.remove('open');
