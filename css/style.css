@@ -618,10 +618,10 @@ h1, h2, h3, h4, h5, h6 {
 .main-content {
   margin-left: 0;
   flex: 1;
-  padding: var(--spacing-xl) var(--spacing-2xl);
-  min-height: calc(100vh - 64px);
-  max-width: 1300px;
+  padding: 28px 36px;
+  min-height: calc(100vh - 68px);
   width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
   transition: all var(--transition-slow);
 }
@@ -698,9 +698,10 @@ h1, h2, h3, h4, h5, h6 {
    ============================================ */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--spacing-lg);
   margin-bottom: var(--spacing-2xl);
+  width: 100%;
 }
 
 .stat-card {
@@ -1226,6 +1227,9 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: var(--radius-xl);
   padding: var(--spacing-2xl);
   margin-bottom: var(--spacing-xl);
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
   animation: slideUp 0.3s ease;
 }
 
@@ -1949,6 +1953,12 @@ h1, h2, h3, h4, h5, h6 {
     padding-top: var(--spacing-lg);
   }
 
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1200px) {
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
