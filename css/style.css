@@ -1955,7 +1955,7 @@ h1, h2, h3, h4, h5, h6 {
     rgba(255, 255, 255, 0.95) 0%,
     rgba(255, 255, 255, 0.85) 35%,
     rgba(255, 255, 255, 0.15) 70%,
-    rgba(255, 255, 255, 0) 100%
+    rgba(255, 255, 255, 0.00) 100%
   );
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
@@ -1986,10 +1986,10 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 24px;
 }
 
-.login-divider-line {
+.login-divider-left {
   flex: 1;
   height: 1px;
-  background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+  background: linear-gradient(to right, transparent, #e2e8f0);
 }
 
 .login-divider-dot {
@@ -1997,7 +1997,13 @@ h1, h2, h3, h4, h5, h6 {
   height: 4px;
   border-radius: 50%;
   background: #1a6fff;
-  opacity: 0.6;
+  opacity: 0.5;
+}
+
+.login-divider-right {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to left, transparent, #e2e8f0);
 }
 
 /* Headings */
@@ -2045,13 +2051,13 @@ h1, h2, h3, h4, h5, h6 {
 
 .field-icon-left {
   position: absolute;
-  left: 12px;
+  left: 10px;
   top: 0;
   bottom: 0;
   display: flex;
   align-items: center;
   pointer-events: none;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.5);
   transition: color 0.25s;
 }
 
@@ -2061,15 +2067,19 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 5px;
   padding-left: 38px;
   padding-right: 16px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   font-family: 'Inter', sans-serif;
   font-size: 14px;
   color: #ffffff;
-  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
   outline: none;
   transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.login-password-input {
+  padding-right: 54px;
 }
 
 .login-field-group:focus-within .field-icon-left {
@@ -2082,7 +2092,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .login-input-field::placeholder {
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 /* Toggle Password Button */
@@ -2093,11 +2103,11 @@ h1, h2, h3, h4, h5, h6 {
   bottom: 0;
   display: flex;
   align-items: center;
-  padding-right: 20px;
+  padding-right: 26px;
   background: none;
   border: none;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.5);
   transition: color 0.2s;
 }
 
@@ -2118,6 +2128,7 @@ h1, h2, h3, h4, h5, h6 {
   color: #60a5fa;
   text-decoration: none;
   transition: color 0.2s;
+  cursor: pointer;
 }
 
 .login-forgot-link:hover {
@@ -2143,7 +2154,7 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  box-shadow: 0 4px 20px rgba(26, 111, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 20px rgba(26, 111, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
   margin-top: 4px;
 }
@@ -2166,13 +2177,14 @@ h1, h2, h3, h4, h5, h6 {
 .login-glow-bar {
   position: absolute;
   bottom: -24px;
-  left: 12.5%;
+  left: 50%;
+  transform: translateX(-50%);
   width: 75%;
   height: 16px;
   border-radius: 9999px;
   background: linear-gradient(90deg, #1a6fff, #00c8ff);
   filter: blur(24px);
-  opacity: 0.35;
+  opacity: 0.3;
   pointer-events: none;
 }
 

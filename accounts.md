@@ -72,33 +72,7 @@ Tài liệu chi tiết về toàn bộ danh sách tài khoản nhân sự, phân
 | **Kỳ Phan** | `ky.phan@apexscengineering.com` | ENGINEER | VietNam | User |
 | **Ngân Trần (Annie)** | `annie.tran@apexscengineering.com` | ENGINEER | VietNam | User |
 
----
 
-### 🇦🇺 Nhóm Văn Phòng Úc (Australia Team)
-| Họ và Tên | Email | Văn phòng | Quyền |
-| :--- | :--- | :--- | :--- |
-| **Malinda Dharmakeerthi** | `malinda@apexscengineering.com` | Australia | User |
-| **Phú Nguyễn** | `phu@apexscengineering.com` | Australia | User |
-| **Rocco Carinci** | `rocco@apexscengineering.com` | Australia | User |
-| **Steven Peka** | `steven@apexscengineering.com` | Australia | User |
-| **Yung Li** | `yung@apexscengineering.com` | Australia | User |
-| **Sean Ngo** | `sean@apexscengineering.com` | Australia | User |
-| **Glenn Boyd** | `glenn@apexscengineering.com` | Australia | User |
-| **Rayan Jayatilake** | `rayan@apexscengineering.com` | Australia | User |
-| **Charbel Nasr** | `charbel@apexscengineering.com` | Australia | User |
-| **Spiros Konnas** | `spiros@apexscengineering.com` | Australia | User |
-| **Harry Lambis** | `harry@apexscengineering.com` | Australia | User |
-| **Chris Iannuzzi** | `chris@apexscengineering.com` | Australia | User |
-| **Jessica Mitchell** | `jessica@apexscengineering.com` | Australia | User |
-| **Jin Liang** | `jin@apexscengineering.com` | Australia | User |
-| **Joseph Presti** | `joseph@apexscengineering.com` | Australia | User |
-| **Amalan Thavarajah** | `amalan@apexscengineering.com` | Australia | User |
-| **Matthew Willis** | `matthew@apexscengineering.com` | Australia | User |
-| **Ellen Jessop** | `accounts@apexscengineering.com` | Australia | User |
-| **Mervin Huynh** | `mervin@apexscengineering.com` | Australia | User |
-| **Danial Malekian** | `danial@apexscengineering.com` | Australia | User |
-| **Michael Rogers-Frassoni** | `michael.rogers@apexscengineering.com` | Australia | User |
-| **Stephen Ye** | `stephen@apexscengineering.com` | Australia | User |
 
 ---
 
