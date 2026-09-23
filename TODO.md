@@ -27,19 +27,15 @@ Hệ thống script và GitHub Actions đã sẵn sàng, chỉ chờ điền 4 S
 
 | # | Secret Name | Giá trị cần điền | Tình trạng |
 |---|---|---|---|
-| 1 | `SMTP_EMAIL` | `johnny.nguyen@apexscengineering.com` *(tạm thời test)* | ⏳ Chờ nhập |
-| 2 | `SMTP_APP_PASSWORD` | *(Mã 16 ký tự tạo từ tài khoản Johnny)* | ⏳ Cần tạo App Password |
+| 1 | `SMTP_EMAIL` | `staff@apexscengineering.com` | ⏳ Chờ nhập |
+| 2 | `SMTP_APP_PASSWORD` | *(Mã 16 ký tự tạo từ tài khoản staff)* | ⏳ Cần tạo App Password |
 | 3 | `SUPABASE_URL` | `https://ejyirnfxuezipogweybo.supabase.co` | ⏳ Chờ nhập |
 | 4 | `SUPABASE_KEY` | `sb_publishable_r1DKG_nf_nyivQgbe6D7YA_zow13__G` | ⏳ Chờ nhập |
 
-> 📌 **LƯU Ý:** Hiện tại dùng mail cá nhân `johnny.nguyen@apexscengineering.com` để test. Khi hệ thống đã test ổn định, chỉ cần quay lại trang Settings Secrets và đổi:
-> - `SMTP_EMAIL` ➔ `staff@apexscengineering.com`
-> - `SMTP_APP_PASSWORD` ➔ Mã App Password mới tạo từ tài khoản `staff@apexscengineering.com`.
-
-> **Cách lấy `SMTP_APP_PASSWORD` (từ tài khoản `johnny.nguyen@apexscengineering.com`):**
-> 1. Đăng nhập tài khoản `johnny.nguyen@apexscengineering.com` tại [mysignins.microsoft.com/security-info](https://mysignins.microsoft.com/security-info).
+> **Cách lấy `SMTP_APP_PASSWORD` từ tài khoản `staff@apexscengineering.com`:**
+> 1. Đăng nhập tài khoản `staff@apexscengineering.com` tại [mysignins.microsoft.com/security-info](https://mysignins.microsoft.com/security-info).
 > 2. Đảm bảo tài khoản đã bật **2-Step Verification** (Xác minh 2 bước).
-> 3. Chọn **Add sign-in method** → chọn **App password** → đặt tên `ApexTesting` → Copy mã 16 ký tự.
+> 3. Chọn **Add sign-in method** → chọn **App password** → đặt tên `ApexTesting` → Copy mã 16 ký tự (viết liền hoặc có dấu cách đều được).
 
 ---
 
@@ -48,7 +44,7 @@ Sau khi thêm xong 4 Secrets:
 1. Vào tab **Actions** trên repo GitHub: `https://github.com/john-cpu25/Testing/actions`
 2. Chọn workflow **"ApexTesting Email Scheduler"**
 3. Nhấn **Run workflow** → Chọn tác vụ:
-   - **`test-email`** *(Khuyên dùng trước: Gửi ngay 1 email test đến `johnny.nguyen@apexscengineering.com` để kiểm tra kết nối SMTP)*
+   - **`test-email`** *(Khuyên dùng trước: Gửi ngay 1 email test đến `staff@apexscengineering.com` để kiểm tra kết nối SMTP)*
    - Hoặc các tác vụ chính thức: `generate-assignments`, `send-reminders`, `both`.
 4. Nhấn nút xanh **Run workflow** và kiểm tra hộp thư đến xem email nhận được chưa.
 
