@@ -66,7 +66,9 @@ const App = (() => {
         quizId: question.quiz_id,
         text: question.text,
         options: question.options,
-        correctIndex: question.correct_index,
+        correctIndex: (question.correct_index !== undefined && question.correct_index !== null)
+          ? question.correct_index
+          : (question.options && question.correct_answer ? question.options.indexOf(question.correct_answer) : 0),
         createdAt: question.created_at
       }))
     }));
