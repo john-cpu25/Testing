@@ -18,6 +18,7 @@ on:
         default: 'both'
         type: choice
         options:
+          - test-email
           - generate-assignments
           - send-reminders
           - both
@@ -38,6 +39,16 @@ jobs:
       - name: 📦 Install dependencies
         working-directory: ./scripts
         run: npm install
+
+      # ---- Test Gửi Email (thủ công qua workflow_dispatch) ----
+      - name: 🧪 Test Email
+        if: github.event.inputs.task == 'test-email'
+        working-directory: ./scripts
+        env:
+          SMTP_EMAIL: ${{ secrets.SMTP_EMAIL }}
+          SMTP_APP_PASSWORD: ${{ secrets.SMTP_APP_PASSWORD }}
+          TEST_TO: ${{ secrets.SMTP_EMAIL }}
+        run: node test-email.js
 
       # ---- Tạo Assignments (07:05 VN hoặc workflow_dispatch) ----
       - name: 📅 Generate Assignments
