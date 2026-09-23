@@ -100,7 +100,7 @@ function formatDate(dateStr) {
 
 // ---- Ghi log email vào Supabase ----
 async function logEmail(userId, quizId, assignmentId, email, type, subject, status, errorMsg = null) {
-  const { error } = await supabase.from('Testing_email_logs').insert({
+  const { error } = await supabase.from('Apex_Testing_email_logs').insert({
     user_id: userId,
     quiz_id: quizId,
     assignment_id: assignmentId,
@@ -118,7 +118,7 @@ async function logEmail(userId, quizId, assignmentId, email, type, subject, stat
 async function alreadySent(assignmentId, type, hoursAgo) {
   const cutoff = new Date(Date.now() - hoursAgo * 3600 * 1000).toISOString();
   const { data, error } = await supabase
-    .from('Testing_email_logs')
+    .from('Apex_Testing_email_logs')
     .select('id')
     .eq('assignment_id', assignmentId)
     .eq('type', type)
@@ -170,15 +170,15 @@ async function main() {
 
   // Lấy tất cả assignments đang pending/in_progress có deadline
   const { data: assignments, error } = await supabase
-    .from('Testing_quiz_assignments')
+    .from('Apex_Testing_quiz_assignments')
     .select(`
       id,
       quiz_id,
       user_id,
       deadline,
       status,
-      Testing_users!Testing_quiz_assignments_user_id_fkey ( id, email, display_name ),
-      Testing_quizzes ( id, title )
+      Apex_Testing_users ( id, email, display_name ),
+      Apex_Testing_quizzes ( id, title )
     `)
     .in('status', ['pending', 'in_progress'])
     .not('deadline', 'is', null);
@@ -199,8 +199,8 @@ async function main() {
   const stats = { reminders: 0, deadlines: 0, overdues: 0, skipped: 0, errors: 0 };
 
   for (const a of assignments) {
-    const user = a.Testing_users;
-    const quiz = a.Testing_quizzes;
+    const user = a.Apex_Testing_users || a.Testing_users;
+    const quiz = a.Apex_Testing_quizzes || a.Testing_quizzes;
 
     if (!user || !quiz) {
       console.log(`⚠️ Bỏ qua assignment ${a.id} (thiếu user/quiz)`);
@@ -219,7 +219,7 @@ async function main() {
     if (hoursLeft < 0) {
       // Cập nhật status thành overdue
       await supabase
-        .from('Testing_quiz_assignments')
+        .from('Apex_Testing_quiz_assignments')
         .update({ status: 'overdue' })
         .eq('id', a.id);
 

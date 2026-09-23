@@ -119,8 +119,8 @@ async function main() {
   // Lấy schedules đến hạn chạy
   const now = new Date().toISOString();
   const { data: schedules, error: schErr } = await supabase
-    .from('Testing_quiz_schedules')
-    .select('*, Testing_quizzes ( id, title )')
+    .from('Apex_Testing_quiz_schedules')
+    .select('*, Apex_Testing_quizzes ( id, title )')
     .eq('active', true)
     .lte('next_run_at', now);
 
@@ -139,7 +139,7 @@ async function main() {
   let totalCreated = 0;
 
   for (const sch of schedules) {
-    const quiz = sch.Testing_quizzes;
+    const quiz = sch.Apex_Testing_quizzes || sch.Testing_quizzes;
     if (!quiz) {
       console.log(`⚠️ Bỏ qua schedule ${sch.id} — không tìm thấy quiz`);
       continue;
@@ -152,12 +152,12 @@ async function main() {
     const deadlineStr = formatDate(deadline.toISOString());
 
     // Lấy danh sách users phù hợp
-    let userQuery = supabase.from('Testing_users').select('id, email, display_name, role');
+    let userQuery = supabase.from('Apex_Testing_users').select('id, email, display_name, role');
 
     if (sch.target_user_ids && sch.target_user_ids.length > 0) {
       userQuery = userQuery.in('id', sch.target_user_ids);
     } else if (sch.target_role === 'all') {
-      userQuery = userQuery.in('role', ['user', 'manager']);
+      userQuery = userQuery.in('role', ['user', 'leader', 'manager']);
     } else if (sch.target_role) {
       userQuery = userQuery.eq('role', sch.target_role);
     } else {
@@ -177,7 +177,7 @@ async function main() {
     for (const user of users) {
       // Kiểm tra đã có assignment pending/in_progress chưa
       const { data: existing } = await supabase
-        .from('Testing_quiz_assignments')
+        .from('Apex_Testing_quiz_assignments')
         .select('id')
         .eq('user_id', user.id)
         .eq('quiz_id', sch.quiz_id)
@@ -191,7 +191,7 @@ async function main() {
 
       // Tạo assignment mới
       const { error: insertErr } = await supabase
-        .from('Testing_quiz_assignments')
+        .from('Apex_Testing_quiz_assignments')
         .insert({
           quiz_id: sch.quiz_id,
           user_id: user.id,
@@ -219,7 +219,7 @@ async function main() {
         console.log(`  ✅ ${user.display_name} → assignment + email OK`);
 
         // Log email
-        await supabase.from('Testing_email_logs').insert({
+        await supabase.from('Apex_Testing_email_logs').insert({
           user_id: user.id,
           quiz_id: sch.quiz_id,
           email: user.email,
@@ -230,7 +230,7 @@ async function main() {
         });
       } catch (emailErr) {
         console.error(`  ⚠️ ${user.display_name} → assignment OK, email THẤT BẠI: ${emailErr.message}`);
-        await supabase.from('Testing_email_logs').insert({
+        await supabase.from('Apex_Testing_email_logs').insert({
           user_id: user.id,
           quiz_id: sch.quiz_id,
           email: user.email,
@@ -249,7 +249,7 @@ async function main() {
     // Cập nhật schedule: last_run_at + next_run_at
     const nextRun = calculateNextRun(sch);
     await supabase
-      .from('Testing_quiz_schedules')
+      .from('Apex_Testing_quiz_schedules')
       .update({
         last_run_at: new Date().toISOString(),
         next_run_at: nextRun.toISOString()

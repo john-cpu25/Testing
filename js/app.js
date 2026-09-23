@@ -48,8 +48,8 @@ const App = (() => {
   async function getQuizzes() {
     if (!supabase) return [];
     const { data: quizzes, error } = await supabase
-      .from('Testing_quizzes')
-      .select(`*, Testing_questions (*)`)
+      .from('Apex_Testing_quizzes')
+      .select(`*, Apex_Testing_questions (*)`)
       .order('created_at', { ascending: false });
     if (error) {
       console.error('Error fetching quizzes:', error);
@@ -61,7 +61,7 @@ const App = (() => {
       description: q.description,
       timeLimit: q.time_limit,
       createdAt: q.created_at,
-      questions: (q.Testing_questions || []).map(question => ({
+      questions: (q.Apex_Testing_questions || q.Testing_questions || []).map(question => ({
         id: question.id,
         quizId: question.quiz_id,
         text: question.text,
@@ -75,7 +75,7 @@ const App = (() => {
   async function saveQuiz(quiz) {
     if (!supabase) return;
     const { data: newQuiz, error: qErr } = await supabase
-      .from('Testing_quizzes')
+      .from('Apex_Testing_quizzes')
       .upsert({
         id: quiz.id,
         title: quiz.title,
@@ -92,7 +92,7 @@ const App = (() => {
     }
 
     if (quiz.questions && quiz.questions.length > 0) {
-      await supabase.from('Testing_questions').delete().eq('quiz_id', quiz.id);
+      await supabase.from('Apex_Testing_questions').delete().eq('quiz_id', quiz.id);
       const questionsToInsert = quiz.questions.map(q => ({
         id: q.id,
         quiz_id: quiz.id,
@@ -100,23 +100,23 @@ const App = (() => {
         options: q.options,
         correct_index: q.correctIndex
       }));
-      await supabase.from('Testing_questions').insert(questionsToInsert);
+      await supabase.from('Apex_Testing_questions').insert(questionsToInsert);
     }
   }
 
   async function deleteQuiz(id) {
       if(!supabase) return;
-      await supabase.from('Testing_quizzes').delete().eq('id', id);
+      await supabase.from('Apex_Testing_quizzes').delete().eq('id', id);
   }
 
   async function getResults() {
     if (!supabase) return [];
     const { data: results, error } = await supabase
-      .from('Testing_results')
+      .from('Apex_Testing_results')
       .select(`
         *,
-        Testing_users ( display_name, email ),
-        Testing_quizzes ( title )
+        Apex_Testing_users ( display_name, email ),
+        Apex_Testing_quizzes ( title )
       `)
       .order('submitted_at', { ascending: false });
     if (error) {
@@ -124,25 +124,29 @@ const App = (() => {
       return [];
     }
     
-    return results.map(r => ({
-      id: r.id,
-      quizId: r.quiz_id,
-      userId: r.user_id,
-      userName: r.Testing_users ? r.Testing_users.display_name : 'Unknown User',
-      quizTitle: r.Testing_quizzes ? r.Testing_quizzes.title : 'Unknown Quiz',
-      score: r.score,
-      totalQuestions: r.total_questions,
-      percentage: parseFloat(r.percentage),
-      timeTaken: r.time_taken || 0,
-      answers: r.answers,
-      completedAt: r.submitted_at
-    }));
+    return results.map(r => {
+      const uObj = r.Apex_Testing_users || r.Testing_users;
+      const qObj = r.Apex_Testing_quizzes || r.Testing_quizzes;
+      return {
+        id: r.id,
+        quizId: r.quiz_id,
+        userId: r.user_id,
+        userName: uObj ? uObj.display_name : 'Unknown User',
+        quizTitle: qObj ? qObj.title : 'Unknown Quiz',
+        score: r.score,
+        totalQuestions: r.total_questions,
+        percentage: parseFloat(r.percentage),
+        timeTaken: r.time_taken || 0,
+        answers: r.answers,
+        completedAt: r.submitted_at
+      };
+    });
   }
 
   async function saveResult(result) {
     if (!supabase) return;
     const { error } = await supabase
-      .from('Testing_results')
+      .from('Apex_Testing_results')
       .insert([
         { 
           id: result.id,
@@ -164,7 +168,7 @@ const App = (() => {
   // ============================================
   async function getAccounts() {
     if (!supabase) return [];
-    const { data, error } = await supabase.from('Testing_users').select('*');
+    const { data, error } = await supabase.from('Apex_Testing_users').select('*');
     if (error) {
        console.error('Error fetching accounts:', error);
        return [];
@@ -198,7 +202,26 @@ const App = (() => {
 
   function isAdmin() {
     const user = getCurrentUser();
-    return user && user.role === 'admin';
+    const r = (user && user.role ? user.role : '').toLowerCase();
+    return r === 'admin' || r === 'admin_app';
+  }
+
+  function isLeader() {
+    const user = getCurrentUser();
+    const r = (user && user.role ? user.role : '').toLowerCase();
+    return r === 'leader';
+  }
+
+  function canManageSchedules() {
+    const user = getCurrentUser();
+    const r = (user && user.role ? user.role : '').toLowerCase();
+    return r === 'admin' || r === 'admin_app' || r === 'leader';
+  }
+
+  function canViewAllResults() {
+    const user = getCurrentUser();
+    const r = (user && user.role ? user.role : '').toLowerCase();
+    return r === 'admin' || r === 'admin_app' || r === 'leader' || r === 'assistant';
   }
 
   // ---- Password Hashing (SHA-256) ----
@@ -217,7 +240,7 @@ const App = (() => {
     if (!u || !pwd) return { success: false, error: 'Vui lòng nhập đầy đủ thông tin' };
 
     let query = supabase
-      .from('Testing_users')
+      .from('Apex_Testing_users')
       .select('*');
 
     if (u.includes('@')) {
@@ -254,7 +277,7 @@ const App = (() => {
     if (needsUpgrade) {
       try {
         await supabase
-          .from('Testing_users')
+          .from('Apex_Testing_users')
           .update({ password: hashedInput })
           .eq('id', account.id);
         console.log('[ApexTesting] Đã nâng cấp mật khẩu sang SHA-256 thành công cho:', account.email);
@@ -332,12 +355,32 @@ const App = (() => {
     const user = getCurrentUser();
     if (!user) return;
 
+    const r = (user.role || 'user').toLowerCase();
+    let avatarClass = 'user-avatar-style';
+    let badgeClass = 'role-user';
+    let roleName = '👤 User';
+
+    if (r === 'admin') {
+      avatarClass = 'admin-avatar';
+      badgeClass = 'role-admin';
+      roleName = '👑 Admin';
+    } else if (r === 'admin_app') {
+      avatarClass = 'admin-avatar';
+      badgeClass = 'role-admin';
+      roleName = '🛡️ AdminApp';
+    } else if (r === 'leader') {
+      avatarClass = 'leader-avatar';
+      badgeClass = 'role-leader';
+      roleName = '⭐ Leader';
+    } else if (r === 'assistant') {
+      avatarClass = 'assistant-avatar';
+      badgeClass = 'role-assistant';
+      roleName = '📋 Assistant';
+    }
+
     // Render user profile in topbar (top-right corner)
     const profileEl = document.getElementById('userProfile');
     if (profileEl) {
-      const avatarClass = user.role === 'admin' ? 'admin-avatar' : 'user-avatar-style';
-      const badgeClass = user.role === 'admin' ? 'role-admin' : 'role-user';
-      const roleName = user.role === 'admin' ? '👑 Admin' : '👤 User';
       const initial = (user.displayName || 'U').charAt(0).toUpperCase();
 
       profileEl.innerHTML = `
@@ -359,8 +402,14 @@ const App = (() => {
 
     // Show/hide admin-only elements
     document.querySelectorAll('.admin-only').forEach(el => {
-      el.style.display = user.role === 'admin' ? '' : 'none';
+      el.style.display = isAdmin() ? '' : 'none';
     });
+
+    // Schedule navigation: accessible by Admin and Leader
+    const navSchedule = document.getElementById('navSchedule');
+    if (navSchedule) {
+      navSchedule.style.display = canManageSchedules() ? '' : 'none';
+    }
   }
 
   // Preloader runner (Intro Video & Progress Sync)
@@ -514,8 +563,13 @@ const App = (() => {
   let currentView = 'dashboard';
 
   async function navigate(view) {
-    // Block admin views for regular users
-    if ((view === 'admin' || view === 'schedule' || view === 'accounts') && !isAdmin()) {
+    // Block admin views for non-admin
+    if ((view === 'admin' || view === 'accounts') && !isAdmin()) {
+      await navigate('quiz');
+      return;
+    }
+    // Block schedule for users who cannot manage schedules
+    if (view === 'schedule' && !canManageSchedules()) {
       await navigate('quiz');
       return;
     }
@@ -581,8 +635,8 @@ const App = (() => {
     const user = getCurrentUser();
     let results = await getResults();
 
-    // User only sees their own results on dashboard
-    if (user && user.role !== 'admin') {
+    // User only sees their own results on dashboard if not allowed to view all
+    if (user && !canViewAllResults()) {
       results = results.filter(r => r.userName === user.displayName);
     }
 
@@ -780,7 +834,7 @@ const App = (() => {
 
     // Verify old password (supports SHA-256 hash and plain-text fallback)
     const { data: users, error: selectError } = await supabase
-      .from('Testing_users')
+      .from('Apex_Testing_users')
       .select('id, password')
       .eq('email', user.username);
 
@@ -801,7 +855,7 @@ const App = (() => {
 
     // Update new password with SHA-256 hash
     const { error: updateError } = await supabase
-      .from('Testing_users')
+      .from('Apex_Testing_users')
       .update({ password: hashedNew })
       .eq('email', user.username);
 
@@ -1334,6 +1388,9 @@ const App = (() => {
     getCurrentUser,
     isLoggedIn,
     isAdmin,
+    isLeader,
+    canManageSchedules,
+    canViewAllResults,
     login,
     logout,
     fillLogin,

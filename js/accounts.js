@@ -17,7 +17,7 @@ const Accounts = (() => {
     if (!supabase) return [];
     try {
       const { data, error } = await supabase
-        .from('Testing_users')
+        .from('Apex_Testing_users')
         .select('*')
         .order('created_at', { ascending: false });
 
@@ -26,11 +26,12 @@ const Accounts = (() => {
         return [];
       }
 
-      // Sort: Admin on top, then by display_name
+      // Sort: Admin & AdminApp on top, then Leader, Assistant, User, then by display_name
+      const roleWeight = { admin_app: 5, admin: 4, leader: 3, assistant: 2, user: 1 };
       allUsers = (data || []).sort((a, b) => {
-        const aAdmin = (a.role || '').toLowerCase() === 'admin' ? 1 : 0;
-        const bAdmin = (b.role || '').toLowerCase() === 'admin' ? 1 : 0;
-        if (aAdmin !== bAdmin) return bAdmin - aAdmin;
+        const aW = roleWeight[(a.role || '').toLowerCase()] || 0;
+        const bW = roleWeight[(b.role || '').toLowerCase()] || 0;
+        if (aW !== bW) return bW - aW;
         return (a.display_name || '').localeCompare(b.display_name || '');
       });
 
@@ -133,18 +134,35 @@ const Accounts = (() => {
 
   // ---- Render Single User Row ----
   function renderUserRow(u, currentUser) {
-    const isAdminRole = (u.role || '').toLowerCase() === 'admin';
+    const r = (u.role || 'user').toLowerCase();
     const isSelf = currentUser && (currentUser.id === u.id || currentUser.username === u.email);
     const initial = (u.display_name || 'U').charAt(0).toUpperCase();
 
     // Check if password is SHA-256 (64 hex characters)
     const isHashed = u.password && u.password.length === 64 && /^[0-9a-f]+$/i.test(u.password);
 
+    let avatarClass = 'avatar-user-color';
+    let roleBadge = '<span class="badge badge-role-user">👤 User</span>';
+
+    if (r === 'admin') {
+      avatarClass = 'avatar-admin-color';
+      roleBadge = '<span class="badge badge-role-admin">👑 Admin</span>';
+    } else if (r === 'admin_app') {
+      avatarClass = 'avatar-admin-color';
+      roleBadge = '<span class="badge badge-role-admin">🛡️ AdminApp</span>';
+    } else if (r === 'leader') {
+      avatarClass = 'avatar-leader-color';
+      roleBadge = '<span class="badge badge-purple">⭐ Leader</span>';
+    } else if (r === 'assistant') {
+      avatarClass = 'avatar-assistant-color';
+      roleBadge = '<span class="badge badge-cyan">📋 Assistant</span>';
+    }
+
     return `
       <tr>
         <td>
           <div class="user-display-cell">
-            <div class="user-avatar-sm ${isAdminRole ? 'avatar-admin-color' : 'avatar-user-color'}">
+            <div class="user-avatar-sm ${avatarClass}">
               ${initial}
             </div>
             <div class="user-cell-meta">
@@ -157,9 +175,7 @@ const Accounts = (() => {
           </div>
         </td>
         <td>
-          <span class="badge ${isAdminRole ? 'badge-role-admin' : 'badge-role-user'}">
-            ${isAdminRole ? '👑 Admin' : '👤 Employee'}
-          </span>
+          ${roleBadge}
         </td>
         <td>
           ${isHashed
@@ -210,8 +226,11 @@ const Accounts = (() => {
       <div class="form-group">
         <label class="form-label">System Role</label>
         <select class="form-select" id="newAccRole">
-          <option value="user" selected>👤 Employee (Assessment Participant)</option>
-          <option value="admin">👑 Admin (Full System Administrator)</option>
+          <option value="user" selected>👤 User (Assessment Participant)</option>
+          <option value="leader">⭐ Leader (Assign tests & create schedules)</option>
+          <option value="assistant">📋 Assistant (View dashboard & results)</option>
+          <option value="admin">👑 Admin (Full Assessment Administrator)</option>
+          <option value="admin_app">🛡️ AdminApp (System Admin)</option>
         </select>
       </div>
     `;
@@ -257,7 +276,7 @@ const Accounts = (() => {
 
     const newId = App.generateId();
     const { error } = await supabase
-      .from('Testing_users')
+      .from('Apex_Testing_users')
       .insert([
         {
           id: newId,
@@ -282,7 +301,7 @@ const Accounts = (() => {
 
   // ---- Modal: Edit Role ----
   function showRoleModal(userId, userName, currentRole) {
-    const currentIsAdmin = (currentRole || '').toLowerCase() === 'admin';
+    const cur = (currentRole || 'user').toLowerCase();
 
     const bodyHtml = `
       <p style="margin-bottom: 16px; color: var(--text-secondary);">
@@ -291,8 +310,11 @@ const Accounts = (() => {
       <div class="form-group">
         <label class="form-label">New Role</label>
         <select class="form-select" id="changeRoleSelect">
-          <option value="user" ${!currentIsAdmin ? 'selected' : ''}>👤 Employee (Take quizzes & view personal results)</option>
-          <option value="admin" ${currentIsAdmin ? 'selected' : ''}>👑 Admin (Manage quizzes, schedules, results & users)</option>
+          <option value="user" ${cur === 'user' ? 'selected' : ''}>👤 User (Take quizzes & view personal results)</option>
+          <option value="leader" ${cur === 'leader' ? 'selected' : ''}>⭐ Leader (Create schedules, assign tests & view results)</option>
+          <option value="assistant" ${cur === 'assistant' ? 'selected' : ''}>📋 Assistant (View dashboard & all assessment results)</option>
+          <option value="admin" ${cur === 'admin' ? 'selected' : ''}>👑 Admin (Manage quizzes, schedules, results & users)</option>
+          <option value="admin_app" ${cur === 'admin_app' ? 'selected' : ''}>🛡️ AdminApp (Full System Administrator)</option>
         </select>
       </div>
     `;
@@ -311,7 +333,7 @@ const Accounts = (() => {
 
     const newRole = select.value;
     const { error } = await supabase
-      .from('Testing_users')
+      .from('Apex_Testing_users')
       .update({ role: newRole })
       .eq('id', userId);
 
@@ -365,7 +387,7 @@ const Accounts = (() => {
     const hashed = await App.hashPassword(newPass);
 
     const { error } = await supabase
-      .from('Testing_users')
+      .from('Apex_Testing_users')
       .update({ password: hashed })
       .eq('id', userId);
 
@@ -386,7 +408,7 @@ const Accounts = (() => {
     if (!confirm) return;
 
     const { error } = await supabase
-      .from('Testing_users')
+      .from('Apex_Testing_users')
       .delete()
       .eq('id', userId);
 

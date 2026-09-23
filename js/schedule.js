@@ -20,11 +20,11 @@ const Schedule = (() => {
   async function getSchedules() {
     if (!supabase) return [];
     const { data, error } = await supabase
-      .from('Testing_quiz_schedules')
+      .from('Apex_Testing_quiz_schedules')
       .select(`
         *,
-        Testing_quizzes ( title ),
-        Testing_users!Testing_quiz_schedules_created_by_fkey ( display_name )
+        Apex_Testing_quizzes ( title ),
+        Apex_Testing_users ( display_name )
       `)
       .order('created_at', { ascending: false });
 
@@ -57,8 +57,10 @@ const Schedule = (() => {
   }
 
   function renderScheduleCard(schedule) {
-    const quizTitle = schedule.Testing_quizzes ? schedule.Testing_quizzes.title : 'Deleted Quiz';
-    const createdBy = schedule.Testing_users ? schedule.Testing_users.display_name : 'Unknown';
+    const qObj = schedule.Apex_Testing_quizzes || schedule.Testing_quizzes;
+    const uObj = schedule.Apex_Testing_users || schedule.Testing_users;
+    const quizTitle = qObj ? qObj.title : 'Deleted Quiz';
+    const createdBy = uObj ? uObj.display_name : 'Unknown';
     const freqLabel = FREQUENCY_LABELS[schedule.frequency] || schedule.frequency;
     const nextRun = schedule.next_run_at ? App.formatDate(schedule.next_run_at) : '—';
     const lastRun = schedule.last_run_at ? App.formatDate(schedule.last_run_at) : 'Never run';
@@ -167,9 +169,9 @@ const Schedule = (() => {
       <div class="form-group">
         <label class="form-label">Assign To *</label>
         <select class="form-select" id="schedTargetRole">
-          <option value="all">All Roles (Users + Managers)</option>
+          <option value="all">All Roles</option>
           <option value="user" selected>Employees Only (Role: user)</option>
-          <option value="manager">Managers Only</option>
+          <option value="leader">Leaders Only</option>
         </select>
       </div>
       <div class="form-group">
@@ -226,7 +228,7 @@ const Schedule = (() => {
     const user = App.getCurrentUser();
 
     const { error } = await supabase
-      .from('Testing_quiz_schedules')
+      .from('Apex_Testing_quiz_schedules')
       .insert({
         quiz_id: quizId,
         created_by: user ? user.id : null,
@@ -349,7 +351,7 @@ const Schedule = (() => {
     }
 
     const { error } = await supabase
-      .from('Testing_quiz_schedules')
+      .from('Apex_Testing_quiz_schedules')
       .update(updateData)
       .eq('id', scheduleId);
 
@@ -365,7 +367,7 @@ const Schedule = (() => {
   // ---- Toggle Active ----
   async function toggleActive(scheduleId, newActive) {
     const { error } = await supabase
-      .from('Testing_quiz_schedules')
+      .from('Apex_Testing_quiz_schedules')
       .update({ active: newActive })
       .eq('id', scheduleId);
 
@@ -397,7 +399,7 @@ const Schedule = (() => {
 
   async function confirmDelete(scheduleId) {
     const { error } = await supabase
-      .from('Testing_quiz_schedules')
+      .from('Apex_Testing_quiz_schedules')
       .delete()
       .eq('id', scheduleId);
 
